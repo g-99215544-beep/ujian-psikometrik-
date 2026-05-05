@@ -1,17 +1,52 @@
 // === Welcome / Pendaftaran screen ===
 
 window.WelcomeScreen = function ({ onStart }) {
-  const [form, setForm] = React.useState(() => {
-    try { return JSON.parse(localStorage.getItem('iat6.murid') || '{}'); } catch { return {}; }
-  });
-  const set = (k, v) => setForm(s => ({ ...s, [k]: v }));
-  const valid = form.nama && form.kelas && form.sekolah;
+  const [ic, setIc] = React.useState('');
+  const [murid, setMurid] = React.useState(null);
+  const [status, setStatus] = React.useState('idle');
+  const [message, setMessage] = React.useState('');
 
-  const submit = (e) => {
+  const lookup = async (e) => {
     e.preventDefault();
-    if (!valid) return;
-    localStorage.setItem('iat6.murid', JSON.stringify(form));
-    onStart(form);
+    const directory = window.StudentDirectory;
+    const cleanIc = directory
+      ? directory.normalizeIc(ic)
+      : String(ic || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+
+    setMurid(null);
+    setMessage('');
+
+    if (!cleanIc || cleanIc.length < 6) {
+      setStatus('error');
+      setMessage('Sila masukkan nombor IC yang sah.');
+      return;
+    }
+
+    if (!directory) {
+      setStatus('error');
+      setMessage('Sambungan Firebase belum tersedia. Sila muat semula halaman.');
+      return;
+    }
+
+    setStatus('loading');
+    try {
+      const found = await directory.findMuridByIc(cleanIc);
+      if (!found) {
+        setStatus('error');
+        setMessage('Rekod murid tidak dijumpai. Sila semak nombor IC.');
+        return;
+      }
+      setIc(cleanIc);
+      setMurid(found);
+      setStatus('found');
+    } catch (err) {
+      setStatus('error');
+      setMessage(err.message || 'Tidak dapat menyemak identiti murid.');
+    }
+  };
+
+  const confirmIdentity = () => {
+    if (murid) onStart(murid);
   };
 
   return (
@@ -21,7 +56,7 @@ window.WelcomeScreen = function ({ onStart }) {
         <h1>Kenali <em>kekuatan</em> dan kecerdasan diri anda.</h1>
         <p className="welcome-lede">
           Instrumen Aptitud Tahun 6 ini terdiri daripada dua bahagian: inventori kecerdasan
-          pelbagai dan ujian penaakulan. Tiada jawapan betul atau salah dalam Bahagian A —
+          pelbagai dan ujian penaakulan. Tiada jawapan betul atau salah dalam Bahagian A -
           jawablah dengan jujur mengikut diri anda yang sebenar.
         </p>
 
@@ -40,36 +75,59 @@ window.WelcomeScreen = function ({ onStart }) {
           </div>
         </div>
 
-        <form onSubmit={submit}>
+        <form onSubmit={lookup}>
           <div className="fld-row full">
             <label className="fld">
-              Nama Penuh
-              <input value={form.nama || ''} onChange={e => set('nama', e.target.value)} placeholder="Cth: Aisyah binti Ahmad" required />
-            </label>
-          </div>
-          <div className="fld-row">
-            <label className="fld">
-              Kelas
-              <input value={form.kelas || ''} onChange={e => set('kelas', e.target.value)} placeholder="Cth: 6 Bestari" required />
-            </label>
-            <label className="fld">
-              No. Pendaftaran (pilihan)
-              <input value={form.id || ''} onChange={e => set('id', e.target.value)} placeholder="Cth: A1234" />
-            </label>
-          </div>
-          <div className="fld-row full">
-            <label className="fld">
-              Nama Sekolah
-              <input value={form.sekolah || ''} onChange={e => set('sekolah', e.target.value)} placeholder="Cth: SK Taman Indah" required />
+              Nombor IC Murid
+              <div className="ic-search">
+                <input
+                  value={ic}
+                  onChange={e => {
+                    const value = e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+                    setIc(value);
+                    setMurid(null);
+                    setStatus('idle');
+                    setMessage('');
+                  }}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder="Cth: 140101010101"
+                  required
+                />
+                <button type="submit" className="btn" disabled={status === 'loading'}>
+                  {status === 'loading' ? 'Menyemak...' : 'Semak'}
+                </button>
+              </div>
             </label>
           </div>
 
+          {message && <div className="form-message error">{message}</div>}
+
+          {murid && (
+            <div className="identity-card">
+              <div>
+                <div className="meta-label">Nama Murid</div>
+                <div className="identity-name">{murid.nama}</div>
+              </div>
+              <div className="identity-row">
+                <div>
+                  <div className="meta-label">Kelas</div>
+                  <div className="meta-val">{murid.kelas}</div>
+                </div>
+                <div>
+                  <div className="meta-label">Sekolah</div>
+                  <div className="meta-val">{murid.sekolah}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="welcome-actions">
-            <button type="submit" className="btn btn-primary" disabled={!valid}>
-              Mula Pentaksiran  →
+            <button type="button" className="btn btn-primary" disabled={!murid} onClick={confirmIdentity}>
+              Mula Pentaksiran →
             </button>
             <span className="brand-sub" style={{ marginLeft: 8 }}>
-              Maklumat hanya disimpan dalam pelayar anda.
+              Sahkan nama dan kelas sebelum mula.
             </span>
           </div>
         </form>
@@ -96,7 +154,7 @@ window.ArahanScreen = function ({ onContinue, onBack }) {
 
         <div className="arahan-section">
           <h3><span className="badge">A</span> Inventori Kecerdasan Pelbagai · 90 soalan</h3>
-          <p>Tandakan <strong>YA</strong> jika anda <em>setuju</em> dengan pernyataan tentang diri anda, atau <strong>TIDAK</strong> jika anda <em>tidak setuju</em>. Jawablah dengan jujur — tiada jawapan betul atau salah.</p>
+          <p>Tandakan <strong>YA</strong> jika anda <em>setuju</em> dengan pernyataan tentang diri anda, atau <strong>TIDAK</strong> jika anda <em>tidak setuju</em>. Jawablah dengan jujur - tiada jawapan betul atau salah.</p>
         </div>
 
         <div className="arahan-section">
@@ -106,7 +164,7 @@ window.ArahanScreen = function ({ onContinue, onBack }) {
 
         <div className="welcome-actions">
           <button onClick={onBack} className="btn btn-ghost">← Kembali</button>
-          <button onClick={onContinue} className="btn btn-primary">Saya Faham, Mula  →</button>
+          <button onClick={onContinue} className="btn btn-primary">Saya Faham, Mula →</button>
         </div>
       </div>
     </div>

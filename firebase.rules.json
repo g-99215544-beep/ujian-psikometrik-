@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "ujianpsikometrikapp": {
+      "meta": {
+        ".read": true,
+        ".write": false
+      },
+      "muridByIc": {
+        ".read": false,
+        ".write": false,
+        "$ic": {
+          ".read": true,
+          ".write": false
+        }
+      }
+    }
+  }
+}

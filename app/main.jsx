@@ -13,12 +13,19 @@ function loadJawapan() {
   try { return JSON.parse(localStorage.getItem('iat6.jawapan') || '{}'); } catch { return {}; }
 }
 
+function loadMurid() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('iat6.murid') || 'null');
+    return saved && saved.ic && saved.nama && saved.kelas ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
 function App() {
   // Routes: 'welcome' | 'arahan' | 'ujian' | 'keputusan'
-  const [route, setRoute] = useState(() => localStorage.getItem('iat6.route') || 'welcome');
-  const [murid, setMurid] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('iat6.murid') || 'null'); } catch { return null; }
-  });
+  const [route, setRoute] = useState(() => loadMurid() ? (localStorage.getItem('iat6.route') || 'welcome') : 'welcome');
+  const [murid, setMurid] = useState(loadMurid);
   const [jawapan, setJawapan] = useState(loadJawapan);
 
   const [tweaks, setTweaks] = window.useTweaks ? window.useTweaks(TWEAK_DEFAULTS) : useTweaksLocal(TWEAK_DEFAULTS);
@@ -57,6 +64,7 @@ function App() {
 
   const handleStart = (data) => {
     setMurid(data);
+    localStorage.setItem('iat6.murid', JSON.stringify(data));
     setRoute('arahan');
   };
 
