@@ -56,6 +56,25 @@ button { font-family: inherit; cursor: pointer; }
 .btn-accent:hover { background: oklch(0.50 0.16 250); border-color: oklch(0.50 0.16 250); }
 .btn-ghost { background: transparent; border-color: transparent; }
 .btn-ghost:hover { background: var(--surface-2); border-color: var(--line); }
+.icon-btn {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+  color: var(--ink); transition: all .15s ease;
+}
+.icon-btn:hover { border-color: var(--ink-2); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.home-icon {
+  width: 18px; height: 16px; position: relative; display: block;
+  border: 2px solid currentColor; border-top: 0; border-radius: 2px;
+}
+.home-icon::before {
+  content: ""; position: absolute; left: 50%; top: -8px;
+  width: 14px; height: 14px; border-left: 2px solid currentColor; border-top: 2px solid currentColor;
+  transform: translateX(-50%) rotate(45deg); background: var(--surface);
+}
+.home-icon::after {
+  content: ""; position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%);
+  width: 5px; height: 8px; border: 2px solid currentColor; border-bottom: 0; background: var(--surface);
+}
 
 input, select {
   font-family: inherit; font-size: 1rem;

@@ -108,6 +108,11 @@ function App() {
 
   const handlePrint = () => window.print();
 
+  const handleHomeFromExam = () => {
+    if (!window.confirm('Kembali ke halaman utama? Jawapan semasa akan kekal disimpan dalam pelayar ini.')) return;
+    setRoute('welcome');
+  };
+
   const openAdmin = () => {
     window.location.hash = 'admin';
     setRoute('admin');
@@ -136,6 +141,7 @@ function App() {
           jawapan={jawapan}
           setJawapan={setJawapan}
           onComplete={handleComplete}
+          onHome={handleHomeFromExam}
           tweaks={tweaks}
           timeLeft={timeLeft}
         />

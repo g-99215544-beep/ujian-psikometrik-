@@ -3,7 +3,7 @@
 const TOTAL_A = 90;
 const TOTAL_B = 30;
 
-window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, tweaks, timeLeft }) {
+window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, tweaks, timeLeft }) {
   // Flat question index: 0..89 -> Bhg A, 90..119 -> Bhg B
   const [idx, setIdx] = React.useState(() => {
     const saved = parseInt(localStorage.getItem('iat6.idx') || '0', 10);
@@ -67,6 +67,9 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, tweaks, 
           </div>
         </div>
         <div className="grow"></div>
+        <button className="icon-btn" onClick={onHome} title="Halaman utama" aria-label="Halaman utama">
+          <span className="home-icon" aria-hidden="true"></span>
+        </button>
         <div className="brand-sub" style={{ marginRight: 12 }}>
           {answeredCount}/120 dijawab
         </div>
