@@ -23,8 +23,11 @@ function loadMurid() {
 }
 
 function App() {
-  // Routes: 'welcome' | 'arahan' | 'ujian' | 'keputusan'
-  const [route, setRoute] = useState(() => loadMurid() ? (localStorage.getItem('iat6.route') || 'welcome') : 'welcome');
+  // Routes: 'welcome' | 'arahan' | 'ujian' | 'keputusan' | 'admin'
+  const [route, setRoute] = useState(() => {
+    if (window.location.hash === '#admin') return 'admin';
+    return loadMurid() ? (localStorage.getItem('iat6.route') || 'welcome') : 'welcome';
+  });
   const [murid, setMurid] = useState(loadMurid);
   const [jawapan, setJawapan] = useState(loadJawapan);
 
@@ -38,9 +41,19 @@ function App() {
   });
   const [timeLeft, setTimeLeft] = useState(null);
 
-  useEffect(() => { localStorage.setItem('iat6.route', route); }, [route]);
+  useEffect(() => {
+    if (route !== 'admin') localStorage.setItem('iat6.route', route);
+  }, [route]);
   useEffect(() => { localStorage.setItem('iat6.jawapan', JSON.stringify(jawapan)); }, [jawapan]);
   useEffect(() => { document.documentElement.setAttribute('data-textsize', tweaks.textSize); }, [tweaks.textSize]);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      if (window.location.hash === '#admin') setRoute('admin');
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   useEffect(() => {
     if (route !== 'ujian' || !tweaks.timerOn) { setTimeLeft(null); return; }
@@ -95,9 +108,23 @@ function App() {
 
   const handlePrint = () => window.print();
 
+  const openAdmin = () => {
+    window.location.hash = 'admin';
+    setRoute('admin');
+  };
+
+  const closeAdmin = () => {
+    if (window.location.hash === '#admin') {
+      history.pushState('', document.title, window.location.pathname + window.location.search);
+    }
+    setRoute(murid ? (localStorage.getItem('iat6.route') || 'welcome') : 'welcome');
+  };
+
   // Render
   let view;
-  if (route === 'welcome' || !murid) {
+  if (route === 'admin') {
+    view = <window.AdminScreen onBack={closeAdmin} />;
+  } else if (route === 'welcome' || !murid) {
     view = <window.WelcomeScreen onStart={handleStart} />;
   } else if (route === 'arahan') {
     view = <window.ArahanScreen onContinue={handleBeginExam} onBack={() => setRoute('welcome')} />;
@@ -134,6 +161,8 @@ function App() {
             <div className="brand-sub">Instrumen Aptitud Tahun 6</div>
           </div>
         </div>
+        <div className="grow"></div>
+        <button className="btn btn-ghost" onClick={openAdmin}>Admin</button>
       </div>
       {view}
       <TweaksUI tweaks={tweaks} setTweak={setTweak} />

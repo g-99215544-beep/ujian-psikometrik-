@@ -43,6 +43,49 @@
     };
   }
 
+  async function saveBorangJawapan(murid, jawapan, summary) {
+    if (!hasFirebase()) {
+      throw new Error('Firebase belum dimuatkan. Sila semak sambungan internet.');
+    }
+    const ic = normalizeIc(murid && (murid.ic || murid.id || murid.noPengenalan));
+    if (!ic) throw new Error('IC murid tidak sah.');
+
+    const payload = {
+      murid: {
+        ic,
+        nama: murid.nama || '',
+        kelas: murid.kelas || '',
+        tahun: murid.tahun || null,
+        namaKelas: murid.namaKelas || '',
+        sekolah: murid.sekolah || 'SK Sri Aman'
+      },
+      jawapan: jawapan || {},
+      summary: summary || {},
+      updatedAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAtIso: new Date().toISOString()
+    };
+
+    await firebase.database().ref(`${ROOT}/borangJawapanByIc/${ic}`).set(payload);
+    return payload;
+  }
+
+  async function listBorangJawapan() {
+    if (!hasFirebase()) {
+      throw new Error('Firebase belum dimuatkan. Sila semak sambungan internet.');
+    }
+    const snap = await firebase.database().ref(`${ROOT}/borangJawapanByIc`).get();
+    if (!snap.exists()) return [];
+
+    return Object.entries(snap.val()).map(([ic, value]) => ({
+      ic,
+      ...value
+    })).sort((a, b) => {
+      const nameA = (a.murid && a.murid.nama) || '';
+      const nameB = (b.murid && b.murid.nama) || '';
+      return nameA.localeCompare(nameB);
+    });
+  }
+
   try {
     if (window.firebase && !firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
@@ -55,5 +98,5 @@
   }
 
   window.UJIAN_DB_ROOT = ROOT;
-  window.StudentDirectory = { normalizeIc, findMuridByIc };
+  window.StudentDirectory = { normalizeIc, findMuridByIc, saveBorangJawapan, listBorangJawapan };
 })();

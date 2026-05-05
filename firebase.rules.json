@@ -12,6 +12,13 @@
           ".read": true,
           ".write": false
         }
+      },
+      "borangJawapanByIc": {
+        ".read": true,
+        "$ic": {
+          ".write": true,
+          ".validate": "newData.hasChildren(['murid', 'jawapan', 'summary', 'updatedAtIso'])"
+        }
       }
     }
   }

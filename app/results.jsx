@@ -22,6 +22,17 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
 
   const tarikh = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
 
+  React.useEffect(() => {
+    if (!window.StudentDirectory || !window.StudentDirectory.saveBorangJawapan || !window.ScoreIAT6) return;
+    const score = window.ScoreIAT6(jawapan);
+    window.StudentDirectory.saveBorangJawapan(murid, jawapan, {
+      answeredCount: score.answeredCount,
+      bRight: score.bRight,
+      bPct: score.bPct,
+      top3: score.top3.map(s => ({ nama: s.nama, ya: s.ya, total: s.total }))
+    }).catch(err => console.warn('Gagal simpan borang jawapan:', err));
+  }, []);
+
   return (
     <div className="app">
       <div className="topbar">
