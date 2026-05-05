@@ -9,6 +9,7 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, tweaks, 
     const saved = parseInt(localStorage.getItem('iat6.idx') || '0', 10);
     return isNaN(saved) ? 0 : Math.min(saved, 119);
   });
+  const [navDirection, setNavDirection] = React.useState('next');
 
   React.useEffect(() => {
     localStorage.setItem('iat6.idx', String(idx));
@@ -26,14 +27,25 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, tweaks, 
   const setAns = (val) => {
     setJawapan(j => ({ ...j, [key]: val }));
     if (isA && idx < 119) {
+      setNavDirection('next');
       window.setTimeout(() => {
         setIdx(prev => prev === idx ? Math.min(idx + 1, 119) : prev);
       }, 180);
     }
   };
 
-  const goNext = () => { if (idx < 119) setIdx(idx + 1); };
-  const goPrev = () => { if (idx > 0) setIdx(idx - 1); };
+  const goNext = () => {
+    if (idx < 119) {
+      setNavDirection('next');
+      setIdx(idx + 1);
+    }
+  };
+  const goPrev = () => {
+    if (idx > 0) {
+      setNavDirection('prev');
+      setIdx(idx - 1);
+    }
+  };
 
   const fmtTime = (s) => {
     if (s == null) return '--';
@@ -68,16 +80,18 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, tweaks, 
 
       <div className="exam">
         <main className="q-area">
-          <div className="q-meta">
-            <span className="chip section">Bahagian {isA ? 'A' : 'B'}</span>
-            <span className="chip">Soalan {item.no} / {isA ? 90 : 30}</span>
-            <span style={{ flex: 1 }}></span>
-            <span>{isA ? 'Inventori kecerdasan' : 'Penaakulan & Menyelesaikan masalah'}</span>
-          </div>
+          <div key={idx} className={`question-slide ${navDirection === 'prev' ? 'from-left' : 'from-right'}`}>
+            <div className="q-meta">
+              <span className="chip section">Bahagian {isA ? 'A' : 'B'}</span>
+              <span className="chip">Soalan {item.no} / {isA ? 90 : 30}</span>
+              <span style={{ flex: 1 }}></span>
+              <span>{isA ? 'Inventori kecerdasan' : 'Penaakulan & Menyelesaikan masalah'}</span>
+            </div>
 
-          {isA
-            ? <BahagianAItem item={item} value={current} onChange={setAns} />
-            : <BahagianBItem item={item} value={current} onChange={setAns} />}
+            {isA
+              ? <BahagianAItem item={item} value={current} onChange={setAns} />
+              : <BahagianBItem item={item} value={current} onChange={setAns} />}
+          </div>
 
           <div className="q-footer">
             <button className="btn" onClick={goPrev} disabled={idx === 0}>&larr; Sebelum</button>
@@ -105,10 +119,10 @@ function BahagianAItem({ item, value, onChange }) {
       <p className="q-stem"><strong>"{item.teks}."</strong></p>
       <div className="yt-choices">
         <button className={`yt-choice ya ${value === 'YA' ? 'selected' : ''}`} onClick={() => onChange('YA')}>
-          <span className="yt-glyph">&check;</span> YA
+          YA
         </button>
         <button className={`yt-choice tidak ${value === 'TIDAK' ? 'selected' : ''}`} onClick={() => onChange('TIDAK')}>
-          <span className="yt-glyph">&times;</span> TIDAK
+          TIDAK
         </button>
       </div>
     </>

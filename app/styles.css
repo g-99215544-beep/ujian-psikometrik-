@@ -173,7 +173,18 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-lg); padding: 36px 44px;
   box-shadow: var(--shadow-sm);
-  display: flex; flex-direction: column; min-height: 480px;
+  display: flex; flex-direction: column; min-height: 480px; overflow: hidden;
+}
+.question-slide { animation: slideInRight .26s ease-out both; }
+.question-slide.from-left { animation-name: slideInLeft; }
+.question-slide.from-right { animation-name: slideInRight; }
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(34px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-34px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 .q-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 0.85rem; color: var(--muted); }
 .q-meta .chip { font-family: var(--font-mono); padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); font-size: 0.78rem; color: var(--ink-2); }
@@ -209,7 +220,6 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 .yt-choice:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
 .yt-choice.ya.selected { border-color: var(--ok); background: oklch(0.95 0.06 150); color: oklch(0.30 0.14 150); }
 .yt-choice.tidak.selected { border-color: var(--err); background: oklch(0.95 0.06 25); color: oklch(0.35 0.16 25); }
-.yt-glyph { font-size: 1.4rem; }
 
 .q-footer { margin-top: auto; padding-top: 28px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line-2); }
 .q-footer-tip { color: var(--muted); font-size: 0.85rem; }
@@ -305,6 +315,10 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   .ic-search { grid-template-columns: 1fr; }
   .identity-row { grid-template-columns: 1fr; }
   .yt-choices { max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-slide { animation: none; }
 }
 
 /* Print */

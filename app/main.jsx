@@ -63,7 +63,11 @@ function App() {
   }, [route, startedAt, tweaks.timerOn]);
 
   const handleStart = (data) => {
+    ['iat6.jawapan','iat6.idx','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
     setMurid(data);
+    setJawapan({});
+    setStartedAt(null);
+    setTimeLeft(null);
     localStorage.setItem('iat6.murid', JSON.stringify(data));
     setRoute('arahan');
   };
