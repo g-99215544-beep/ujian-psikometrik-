@@ -1,0 +1,190 @@
+// Inventori Kecerdasan Pelbagai - 90 item
+// Susunan: kitaran 9 kecerdasan berulang
+// Index 0,9,18,...  = Linguistik
+// Index 1,10,19,... = Logik-Matematik
+// Index 2,11,20,... = Intrapersonal
+// Index 3,12,21,... = Visual-Ruang
+// Index 4,13,22,... = Naturalis
+// Index 5,14,23,... = Interpersonal
+// Index 6,15,24,... = Kinestetik
+// Index 7,16,25,... = Muzik
+// Index 8,17,26,... = Eksistensial / Kerohanian
+
+window.INTELLIGENCES = [
+  { key: 'linguistik',     nama: 'Verbal-Linguistik',  warna: '#5B8DEF', icon: '✦', deskripsi: 'Berkebolehan menggunakan bahasa secara berkesan — bertutur, menulis, membaca, dan memahami perkataan.' },
+  { key: 'logik',          nama: 'Logik-Matematik',    warna: '#7B61FF', icon: '◇', deskripsi: 'Berkebolehan dalam penaakulan, nombor, pola, dan menyelesaikan masalah secara sistematik.' },
+  { key: 'intrapersonal',  nama: 'Intrapersonal',      warna: '#22A699', icon: '◯', deskripsi: 'Memahami diri sendiri — kekuatan, kelemahan, perasaan, dan motivasi.' },
+  { key: 'visual',         nama: 'Visual-Ruang',       warna: '#F4A261', icon: '▲', deskripsi: 'Berfikir dalam bentuk gambar, ruang, dan visualisasi tiga dimensi.' },
+  { key: 'naturalis',      nama: 'Naturalis',          warna: '#5DAA68', icon: '✿', deskripsi: 'Mencintai dan memahami alam semula jadi, tumbuhan, dan haiwan.' },
+  { key: 'interpersonal',  nama: 'Interpersonal',      warna: '#E76F51', icon: '☻', deskripsi: 'Berkebolehan memahami orang lain dan bekerja secara berkumpulan.' },
+  { key: 'kinestetik',     nama: 'Kinestetik',         warna: '#D4A017', icon: '✱', deskripsi: 'Menggunakan badan dengan baik — sukan, tarian, kraf tangan.' },
+  { key: 'muzik',          nama: 'Muzik',              warna: '#B5179E', icon: '♪', deskripsi: 'Sensitif kepada bunyi, irama, dan muzik.' },
+  { key: 'eksistensial',   nama: 'Eksistensial',       warna: '#6C757D', icon: '✧', deskripsi: 'Memikirkan persoalan kehidupan, kerohanian, dan makna kewujudan.' },
+];
+
+// Dari PDF — disusun mengikut nombor soalan asal (1-90)
+window.BAHAGIAN_A = [
+  // Set 1 (1-9)
+  { no: 1,  teks: "Saya suka menulis di media sosial",                                  domain: 0 },
+  { no: 2,  teks: "Saya suka permainan yang berkaitan dengan susunan nombor",           domain: 1 },
+  { no: 3,  teks: "Saya suka melakukan aktiviti secara bersendirian",                   domain: 2 },
+  { no: 4,  teks: "Saya suka mencatat nota menggunakan gambar rajah",                   domain: 3 },
+  { no: 5,  teks: "Saya suka melihat tumbuh-tumbuhan hijau",                            domain: 4 },
+  { no: 6,  teks: "Saya seorang yang peramah",                                          domain: 5 },
+  { no: 7,  teks: "Saya suka melakukan aktiviti sukan",                                 domain: 6 },
+  { no: 8,  teks: "Saya suka menyanyi",                                                 domain: 7 },
+  { no: 9,  teks: "Saya menghormati pendapat orang lain",                               domain: 8 },
+  // Set 2 (10-18)
+  { no: 10, teks: "Saya boleh menceritakan semula sesuatu perkara",                     domain: 0 },
+  { no: 11, teks: "Saya suka memasang alat permainan berdasarkan panduan",              domain: 1 },
+  { no: 12, teks: "Saya suka belajar sendiri",                                          domain: 2 },
+  { no: 13, teks: "Saya suka membaca buku bergambar",                                   domain: 3 },
+  { no: 14, teks: "Saya suka menonton dokumentari berkaitan haiwan",                    domain: 4 },
+  { no: 15, teks: "Saya mudah bergaul dengan ramai orang",                              domain: 5 },
+  { no: 16, teks: "Saya suka melakukan aktiviti yang berkaitan pergerakan",             domain: 6 },
+  { no: 17, teks: "Saya mengenali not muzik",                                           domain: 7 },
+  { no: 18, teks: "Saya bersyukur dengan apa yang dimiliki",                            domain: 8 },
+  // Set 3 (19-27)
+  { no: 19, teks: "Saya suka mempelajari lebih daripada satu bahasa",                   domain: 0 },
+  { no: 20, teks: "Saya suka menyelesaikan masalah berkaitan nombor",                   domain: 1 },
+  { no: 21, teks: "Saya suka melakukan sesuatu perkara mengikut cara sendiri",          domain: 2 },
+  { no: 22, teks: "Saya suka menghasilkan model tiga dimensi",                          domain: 3 },
+  { no: 23, teks: "Saya suka suasana alam semula jadi",                                 domain: 4 },
+  { no: 24, teks: "Saya suka menghadiri majlis keramaian",                              domain: 5 },
+  { no: 25, teks: "Saya suka menyertai aktiviti sukaneka",                              domain: 6 },
+  { no: 26, teks: "Saya boleh mengenal pasti irama muzik",                              domain: 7 },
+  { no: 27, teks: "Saya boleh menerima kelebihan diri",                                 domain: 8 },
+  // Set 4 (28-36)
+  { no: 28, teks: "Saya suka permainan berasaskan bahasa",                              domain: 0 },
+  { no: 29, teks: "Saya mudah mengingat menggunakan nombor",                            domain: 1 },
+  { no: 30, teks: "Saya berusaha mencapai matlamat diri",                               domain: 2 },
+  { no: 31, teks: "Saya suka melukis",                                                  domain: 3 },
+  { no: 32, teks: "Saya suka menikmati keindahan alam",                                 domain: 4 },
+  { no: 33, teks: "Saya mempunyai ramai kawan",                                         domain: 5 },
+  { no: 34, teks: "Saya suka menyertai aktiviti merentas desa",                         domain: 6 },
+  { no: 35, teks: "Saya suka mendengar lagu",                                           domain: 7 },
+  { no: 36, teks: "Saya berusaha memperbaiki kelemahan diri",                           domain: 8 },
+  // Set 5 (37-45)
+  { no: 37, teks: "Saya boleh menyampaikan ucapan dengan lancar",                       domain: 0 },
+  { no: 38, teks: "Saya suka menyusun barang mengikut kategori",                        domain: 1 },
+  { no: 39, teks: "Saya mempunyai cita-cita yang jelas",                                domain: 2 },
+  { no: 40, teks: "Saya mudah memahami peta",                                           domain: 3 },
+  { no: 41, teks: "Saya boleh mereka cipta sesuatu daripada bahan terbuang",            domain: 4 },
+  { no: 42, teks: "Saya suka menyertai aktiviti berkumpulan",                           domain: 5 },
+  { no: 43, teks: "Saya boleh melambung dan menangkap bola",                            domain: 6 },
+  { no: 44, teks: "Saya boleh bermain alat muzik",                                      domain: 7 },
+  { no: 45, teks: "Saya menghargai kehidupan yang dianugerahkan",                       domain: 8 }, // diisi semula (terpotong dalam PDF)
+  // Set 6 (46-54)
+  { no: 46, teks: "Saya suka membaca puisi",                                            domain: 0 },
+  { no: 47, teks: "Saya mudah memahami pola nombor",                                    domain: 1 },
+  { no: 48, teks: "Saya memahami diri sendiri",                                         domain: 2 },
+  { no: 49, teks: "Saya suka menyelesaikan jigsaw puzzle",                              domain: 3 },
+  { no: 50, teks: "Saya suka mengkaji tentang alam sekitar",                            domain: 4 },
+  { no: 51, teks: "Saya suka menyertai aktiviti gotong-royong",                         domain: 5 },
+  { no: 52, teks: "Saya suka aktiviti berenang",                                        domain: 6 },
+  { no: 53, teks: "Saya suka menghayati lirik lagu",                                    domain: 7 },
+  { no: 54, teks: "Saya percaya setiap manusia mempunyai tujuan hidup",                 domain: 8 },
+  // Set 7 (55-63)
+  { no: 55, teks: "Saya suka menulis cerita pendek",                                    domain: 0 },
+  { no: 56, teks: "Saya akan mendapatkan penjelasan sesuatu perkara",                   domain: 1 },
+  { no: 57, teks: "Saya suka persekitaran yang sunyi",                                  domain: 2 },
+  { no: 58, teks: "Saya boleh mengingati sesuatu lokasi",                               domain: 3 },
+  { no: 59, teks: "Saya boleh mengenal pasti pelbagai jenis tumbuhan",                  domain: 4 },
+  { no: 60, teks: "Saya boleh memahami perasaan rakan-rakan",                           domain: 5 },
+  { no: 61, teks: "Saya suka aktiviti senamrobik",                                      domain: 6 },
+  { no: 62, teks: "Saya mengenali pelbagai jenis alat muzik",                           domain: 7 },
+  { no: 63, teks: "Saya suka mengetahui perkara berkaitan keagamaan",                   domain: 8 },
+  // Set 8 (64-72)
+  { no: 64, teks: "Saya suka menulis diari",                                            domain: 0 },
+  { no: 65, teks: "Saya menyelesaikan masalah secara sistematik",                       domain: 1 },
+  { no: 66, teks: "Saya yakin dengan kemampuan diri",                                   domain: 2 },
+  { no: 67, teks: "Saya memahami simbol pada peta",                                     domain: 3 },
+  { no: 68, teks: "Saya suka melihat bentuk awan",                                      domain: 4 },
+  { no: 69, teks: "Saya suka berkongsi pendapat dengan rakan-rakan",                    domain: 5 },
+  { no: 70, teks: "Saya boleh mengimbangkan badan",                                     domain: 6 },
+  { no: 71, teks: "Saya boleh menyambung lirik lagu yang dinyanyikan",                  domain: 7 },
+  { no: 72, teks: "Saya boleh membezakan perkara baik dan buruk",                       domain: 8 },
+  // Set 9 (73-81)
+  { no: 73, teks: "Saya suka berbahas",                                                 domain: 0 },
+  { no: 74, teks: "Saya suka permainan yang mencabar minda",                            domain: 1 },
+  { no: 75, teks: "Saya boleh membuat keputusan untuk diri sendiri",                    domain: 2 },
+  { no: 76, teks: "Saya mudah memahami sesuatu gambar rajah",                           domain: 3 },
+  { no: 77, teks: "Saya suka mendengar bunyi deruan ombak",                             domain: 4 },
+  { no: 78, teks: "Saya suka membantu rakan-rakan",                                     domain: 5 },
+  { no: 79, teks: "Saya boleh menggunakan anggota badan dalam permainan",               domain: 6 },
+  { no: 80, teks: "Saya mudah mengingati maklumat yang dipelajari menggunakan lagu",    domain: 7 },
+  { no: 81, teks: "Saya menghargai ciptaan tuhan",                                      domain: 8 },
+  // Set 10 (82-90)
+  { no: 82, teks: "Saya boleh menyampaikan idea dengan jelas",                          domain: 0 },
+  { no: 83, teks: "Saya boleh menggunakan logik untuk membuat keputusan",               domain: 1 },
+  { no: 84, teks: "Saya suka berdikari dalam melaksanakan tugasan",                     domain: 2 },
+  { no: 85, teks: "Saya boleh menyusun objek mengikut ruang",                           domain: 3 },
+  { no: 86, teks: "Saya suka mendengar bunyi haiwan",                                   domain: 4 },
+  { no: 87, teks: "Saya suka menyertai aktiviti sukarelawan",                           domain: 5 },
+  { no: 88, teks: "Saya boleh melakukan aktiviti menggunakan gelung",                   domain: 6 },
+  { no: 89, teks: "Saya boleh mengikuti rentak muzik",                                  domain: 7 },
+  { no: 90, teks: "Saya mudah simpati kepada orang lain",                               domain: 8 },
+];
+
+// Bahagian B - 30 soalan aneka pilihan
+// 'visual' field = jenis rajah yang perlu di-render (kalau ada)
+window.BAHAGIAN_B = [
+  { no: 1, teks: "Cerdik : Pandai\nHaus : ?", pilihan: ["Letih","Risau","Peluh","Dahaga"], jawapan: "D" },
+  { no: 2, teks: "Huruf kepada suku kata adalah ibarat suku kata kepada _______ .", pilihan: ["petikan","perkataan","penulisan","perenggan"], jawapan: "B" },
+  { no: 3, teks: "A, B, C, ..., Z = 1, 2, 3, ..., 26\nC   E   G   A   H = ?", pilihan: ["3 1 5 7 8","3 1 7 5 8","3 5 1 7 8","3 5 7 1 8"], jawapan: "D" },
+  { no: 4, teks: "Lihat pola buah berikut. Apakah susunan yang lengkap?", visual: "buah4", pilihan: [
+      "Epal, epal, mangga, nanas, epal, nanas, epal",
+      "Epal, epal, mangga, nanas, epal, mangga, epal",
+      "Epal, epal, mangga, nanas, epal, mangga, nanas",
+      "Epal, epal, mangga, nanas, epal, nanas, mangga",
+    ], jawapan: "D" },
+  { no: 5, teks: "Berdasarkan corak huruf yang ditunjukkan, pilih jawapan yang betul.", visual: "huruf5", pilihan: ["NLMNKLMNK","NLKMKLMNK","NLKMKLNMK","NLKMLKNMK"], jawapan: "C" },
+  { no: 6, teks: "TUKANG = ▲ ▲ ▲\nKERJA = ▲ ▲\nLAYU = ▲\nKEJAYAAN = ?", visual: "bentuk6", pilihan: ["▲","▲ ▲","▲ ▲ ▲","▲ ▲ ▲ ▲"], jawapan: "C" },
+  { no: 7, teks: "Berdasarkan rajah salasilah keluarga, Amran merupakan ____ kepada Pak Man dan Mak Eton.", visual: "salasilah", pilihan: ["biras","besan","mentua","menantu"], jawapan: "D" },
+  { no: 8, teks: "Bertutur :: Bercakap\nBerjumpa :: ?", pilihan: ["Berucap","Bertemu","Berbincang","Bersembang"], jawapan: "B" },
+  { no: 9, teks: "Lengkapkan corak huruf berikut: a y a k k k a c a → o y o k ?", visual: "huruf9", pilihan: ["koyak","katak","kodok","kapok"], jawapan: "C" },
+  { no: 10, teks: "HUJAN → IVKBO\nPANAS → ?", pilihan: ["QBOBT","QOBOT","QTOBO","QOTBO"], jawapan: "A" },
+  { no: 11, teks: "Hulu :: Hilir\nPangkal :: ?", pilihan: ["Awal","Depan","Tamat","Hujung"], jawapan: "D" },
+  { no: 12, teks: "Lihat persamaan bentuk berikut:\n■ + ● = 6\n■ + ● + ▲ = 6\n■ + ▲ + ▲ = 6\n■ + ▲ + ● + ● = ?", visual: "bentuk12", pilihan: ["4","5","6","7"], jawapan: "D" },
+  { no: 13, teks: "Pucuk :: Pistol :: ?", pilihan: ["Surat","Kapak","Kertas","Senapang"], jawapan: "A" },
+  { no: 14, teks: "katak × masam\nradar    tamat\n× = ?", visual: "huruf14", pilihan: ["koyak","takut","malam","minum"], jawapan: "C" },
+  { no: 15, teks: "KELAMBU\nAntara berikut, yang manakah tidak berkaitan dengan perkataan di atas?", pilihan: ["Lembu","Lampu","Kelabu","Makbul"], jawapan: "B" },
+  { no: 16, teks: "Jadual menunjukkan skor badminton bagi satu pertandingan.\n\nSet I  — Pemain X: 24, Pemain Y: 22\nSet II — Pemain X: 11, Pemain Y: 21\nSet III— Pemain X: 21, Pemain Y: 14\n\nPernyataan manakah yang benar?", pilihan: [
+      "Pemain Y memenangi set I dengan perbezaan 2 mata",
+      "Pemain X memenangi set I dengan perbezaan 2 mata",
+      "Pemain Y memenangi set III dengan perbezaan 7 mata",
+      "Pemain X memenangi set II dengan perbezaan 10 mata",
+    ], jawapan: "B" },
+  { no: 17, teks: "Sebuah kelas mempunyai 40 orang murid. Guru kelas telah mengadakan sambutan hari lahir bagi 18 orang murid yang lahir dari bulan Januari hingga bulan Mei. Majlis seterusnya ialah pada bulan Jun melibatkan 8 orang murid.\n\nBerapa orang muridkah yang belum diraikan dari bulan Julai hingga Disember?",
+    pilihan: ["32","22","14","10"], jawapan: "C" },
+  { no: 18, teks: "Amir membeli 5 kotak pensel. Setiap kotak ada 12 pensel. Dia memberikan 8 pensel kepada adiknya.\n\nBerapakah bilangan pensel yang tinggal?",
+    pilihan: ["52","58","60","68"], jawapan: "A" },
+  { no: 19, teks: "Maryam dapat menyediakan 35 biji donut dalam masa 15 minit. Dia perlu menyediakan 210 biji donut untuk dihantar ke kantin sekolah. Jika Maryam mula pada jam 8.50 pagi, dia akan selesai menyediakan donut pada jam ...",
+    pilihan: ["0130","1020","1400","2220"], jawapan: "B" },
+  { no: 20, teks: "Sebuah bas membawa 40 penumpang. Di perhentian pertama, 5 orang turun dan 12 orang naik.\n\nBerapakah penumpang yang ada di dalam bas sekarang?",
+    pilihan: ["33","45","47","57"], jawapan: "C" },
+  { no: 21, teks: "Lihat susunan nombor di bawah. Saya berada di atas. Di bawah saya ialah 6. Saya bergerak 2 langkah ke kiri. Siapakah di bawah saya?", visual: "grid21", pilihan: ["4","7","9","8"], jawapan: "A" },
+  { no: 22, teks: "PANEL SOLAR — “Tenaga Boleh Diperbaharui”\nPurata bil elektrik bulanan sebelum panel solar: RM350\nPurata bil elektrik bulanan selepas panel solar: RM15\nPenjimatan bil elektrik tahunan: RM4020\n\nPilih pernyataan yang benar.",
+    pilihan: [
+      "Bil elektrik tahunan tanpa panel solar = RM350 × 12",
+      "Bil elektrik tahunan tanpa panel solar = RM335 × 12",
+      "Bil elektrik tahunan dengan panel solar = RM335 × 12",
+      "Bil elektrik tahunan dengan panel solar = RM350 × 12",
+    ], jawapan: "A" },
+  { no: 23, teks: "Harga sebiji kek 2 kali harga 3 bungkus roti. Jika 1 bungkus roti RM2, berapa harga sebiji kek?",
+    pilihan: ["RM4","RM6","RM12","RM18"], jawapan: "C" },
+  { no: 24, teks: "Perjalanan menaiki kereta dari Kuala Lumpur ke Pulau Pinang mengambil masa 4 jam 30 minit. Puan Zakiah bertolak dari Kuala Lumpur pada jam 8.00 a.m. Semasa perjalanan, dia berhenti selama 45 minit untuk berehat.\n\nPada pukul berapakah Puan Zakiah sampai ke destinasinya?",
+    pilihan: ["12.15 p.m.","12.05 p.m.","01.15 p.m.","01.35 p.m."], jawapan: "C" },
+  { no: 25, teks: "Secara purata, jangka hayat 1 tahun umur bagi seekor kucing bersamaan 15 tahun umur manusia. Jika Arfa memelihara 2 ekor kucing berumur 2 dan 4 tahun masing-masing, berapakah jumlah umur kucing itu mengikut umur manusia?",
+    pilihan: ["30 tahun","60 tahun","90 tahun","120 tahun"], jawapan: "C" },
+  { no: 26, teks: "Jarak dari rumah Zarul ke rumah Lee adalah 150 m. Jika jarak 1 cm pada sebuah peta mewakili 10 m jarak sebenar.\n\nBerapakah jarak pada peta?",
+    pilihan: ["10 cm","15 cm","100 cm","150 cm"], jawapan: "B" },
+  { no: 27, teks: "Terdapat 4 biji guli biru dan sebiji guli merah di dalam sebuah bekas. Jika Salmah ingin mendapatkan guli biru daripada bekas tersebut, berapa peratuskah kebarangkalian untuk mendapatkan guli tersebut?",
+    pilihan: ["10 %","40 %","50 %","80 %"], jawapan: "D" },
+  { no: 28, teks: "Terdapat 12 300 penonton di stadium. Bilangan penonton lelaki adalah dua kali daripada bilangan penonton perempuan.\n\nBerapakah bilangan penonton lelaki?",
+    pilihan: ["4 100","6 150","8 200","10 250"], jawapan: "C" },
+  { no: 29, teks: "Terdapat 420 biji guli dalam sebuah balang. Guli itu diagihkan kepada Kamal, Shila, dan Ainul. Shila mendapat dua kali ganda bilangan guli Kamal manakala Ainul mendapat dua kali ganda bilangan guli Shila.\n\nBerapakah bilangan guli Ainul?",
+    pilihan: ["60 biji","120 biji","140 biji","240 biji"], jawapan: "D" },
+  { no: 30, teks: "Dalila mempunyai 3 keping wang kertas RM50. Dia menggunakan wang tersebut untuk membeli sebuah raket badminton yang berharga RM85 dan sepasang kasut berharga RM43. Baki wang diagihkan sama banyak kepada diri sendiri dan 4 orang adiknya.\n\nBerapakah wang yang setiap orang dapat?",
+    pilihan: ["RM 4.40","RM 5.50","RM 13.00","RM 22.00"], jawapan: "A" },
+];
