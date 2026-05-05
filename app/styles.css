@@ -166,29 +166,9 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 
 /* === Ujian layout === */
 .exam {
-  flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 24px;
-  padding: 24px; max-width: 1400px; margin: 0 auto; width: 100%;
+  flex: 1; display: grid; grid-template-columns: 1fr; gap: 24px;
+  padding: 24px; max-width: 980px; margin: 0 auto; width: 100%;
 }
-.sidebar {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-lg); padding: 20px;
-  position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow: auto;
-}
-.sb-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
-.sb-title { font-weight: 600; font-size: 0.95rem; }
-.sb-prog { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
-.sb-section { margin-bottom: 20px; }
-.sb-section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
-.qmap { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
-.qmap button {
-  aspect-ratio: 1; border-radius: 6px; border: 1px solid var(--line);
-  background: var(--surface); color: var(--ink-2); font-size: 0.78rem; font-weight: 600;
-  font-family: var(--font-mono); padding: 0; transition: all .12s ease;
-}
-.qmap button:hover { border-color: var(--ink); color: var(--ink); }
-.qmap button.answered { background: var(--ink); color: white; border-color: var(--ink); }
-.qmap button.current  { outline: 2px solid var(--accent); outline-offset: 1px; }
-
 .q-area {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-lg); padding: 36px 44px;
@@ -318,8 +298,6 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 /* === Mobile === */
 @media (max-width: 880px) {
   .exam { grid-template-columns: 1fr; padding: 16px; }
-  .sidebar { position: relative; top: 0; max-height: none; }
-  .qmap { grid-template-columns: repeat(10, 1fr); }
   .q-area { padding: 24px 20px; }
   .welcome-card, .arahan-card { padding: 32px 24px; }
   .welcome-meta { grid-template-columns: 1fr; }
@@ -331,6 +309,6 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 
 /* Print */
 @media print {
-  .topbar, .sidebar, .res-actions, .tweaks-panel, .q-footer { display: none !important; }
+  .topbar, .res-actions, .tweaks-panel, .q-footer { display: none !important; }
   body { background: white; }
 }
