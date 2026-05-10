@@ -2,23 +2,13 @@
 
 window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
   const intel = window.INTELLIGENCES;
-
-  // Score Bahagian A: count YA per domain (10 items per domain)
-  const aScores = intel.map((_, dIdx) => {
-    const items = window.BAHAGIAN_A.filter(q => q.domain === dIdx);
-    const ya = items.filter(q => jawapan[`A${q.no}`] === 'YA').length;
-    return { idx: dIdx, ya, total: items.length, pct: Math.round((ya / items.length) * 100) };
-  });
-  const aSorted = [...aScores].sort((a, b) => b.ya - a.ya);
-  const top3 = aSorted.slice(0, 3);
-
-  // Score Bahagian B: against jawapan key
-  const bResults = window.BAHAGIAN_B.map(q => {
-    const userAns = jawapan[`B${q.no}`];
-    return { no: q.no, teks: q.teks.split('\n')[0], userAns: userAns || '—', correct: q.jawapan, isRight: userAns === q.jawapan };
-  });
-  const bRight = bResults.filter(r => r.isRight).length;
-  const bPct = Math.round((bRight / 30) * 100);
+  const score = window.ScoreIAT6(jawapan);
+  const aScores = score.aScores;
+  const top3 = score.top3;
+  const bResults = score.bResults;
+  const bRight = score.bRight;
+  const bPct = score.bPct;
+  const analysis = score.analysis;
 
   const tarikh = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -29,6 +19,9 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
       answeredCount: score.answeredCount,
       bRight: score.bRight,
       bPct: score.bPct,
+      bReasoning: score.bReasoning,
+      bProblemSolving: score.bProblemSolving,
+      analysis: score.analysis,
       top3: score.top3.map(s => ({ nama: s.nama, ya: s.ya, total: s.total }))
     }).catch(err => console.warn('Gagal simpan borang jawapan:', err));
   }, []);
@@ -124,6 +117,8 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
             </div>
           </div>
 
+          <AnalysisSummary analysis={analysis} />
+
           {/* Bahagian B review */}
           <div className="res-card">
             <h2>Semakan Jawapan Bahagian B</h2>
@@ -159,3 +154,54 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
     </div>
   );
 };
+
+function AnalysisSummary({ analysis }) {
+  return (
+    <div className="res-card analysis-card">
+      <h2>Analisis Psikometrik</h2>
+      <p className="res-card-sub">Tafsiran ringkas berdasarkan pola jawapan murid.</p>
+      <div className="analysis-grid">
+        <AnalysisBlock
+          title="Bahagian A"
+          scoreText={`${analysis.bahagianA.topDomains.length ? analysis.bahagianA.topDomains[0].ya : 0}/10 domain utama`}
+          level="Profil Kecerdasan"
+          tone="profile"
+          focus={analysis.bahagianA.focus}
+          description={analysis.bahagianA.description}
+        />
+        <AnalysisBlock
+          title="Bahagian B 1-15"
+          scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
+          level={analysis.bReasoning.level}
+          tone={analysis.bReasoning.tone}
+          focus={analysis.bReasoning.focus}
+          description={analysis.bReasoning.description}
+        />
+        <AnalysisBlock
+          title="Bahagian B 16-30"
+          scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
+          level={analysis.bProblemSolving.level}
+          tone={analysis.bProblemSolving.tone}
+          focus={analysis.bProblemSolving.focus}
+          description={analysis.bProblemSolving.description}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AnalysisBlock({ title, scoreText, level, tone, focus, description }) {
+  return (
+    <div className={`analysis-block ${tone}`}>
+      <div className="analysis-block-head">
+        <div>
+          <h3>{title}</h3>
+          <p>{focus}</p>
+        </div>
+        <strong>{scoreText}</strong>
+      </div>
+      <div className="analysis-level">{level}</div>
+      <p className="analysis-copy">{description}</p>
+    </div>
+  );
+}

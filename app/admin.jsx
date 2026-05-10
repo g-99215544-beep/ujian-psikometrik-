@@ -145,6 +145,16 @@ window.AdminScreen = function ({ onBack }) {
             <div className="admin-card">
               <div className="sheet-toolbar">
                 <div>
+                  <h2>Analisis Psikometrik</h2>
+                  <p className="res-card-sub">Tafsiran Bahagian A, Bahagian B 1-15 dan Bahagian B 16-30 untuk murid ini.</p>
+                </div>
+              </div>
+              <AdminAnalysis analysis={score.analysis} />
+            </div>
+
+            <div className="admin-card">
+              <div className="sheet-toolbar">
+                <div>
                   <h2>Borang Jawapan</h2>
                   <p className="res-card-sub">Format cetakan seperti borang jawapan rasmi.</p>
                 </div>
@@ -158,6 +168,53 @@ window.AdminScreen = function ({ onBack }) {
     </div>
   );
 };
+
+function AdminAnalysis({ analysis }) {
+  return (
+    <div className="analysis-grid admin-analysis-grid">
+      <AdminAnalysisBlock
+        title="Bahagian A"
+        scoreText={`${analysis.bahagianA.topDomains.length ? analysis.bahagianA.topDomains[0].ya : 0}/10 domain utama`}
+        level="Profil Kecerdasan"
+        tone="profile"
+        focus={analysis.bahagianA.focus}
+        description={analysis.bahagianA.description}
+      />
+      <AdminAnalysisBlock
+        title="Bahagian B 1-15"
+        scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
+        level={analysis.bReasoning.level}
+        tone={analysis.bReasoning.tone}
+        focus={analysis.bReasoning.focus}
+        description={analysis.bReasoning.description}
+      />
+      <AdminAnalysisBlock
+        title="Bahagian B 16-30"
+        scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
+        level={analysis.bProblemSolving.level}
+        tone={analysis.bProblemSolving.tone}
+        focus={analysis.bProblemSolving.focus}
+        description={analysis.bProblemSolving.description}
+      />
+    </div>
+  );
+}
+
+function AdminAnalysisBlock({ title, scoreText, level, tone, focus, description }) {
+  return (
+    <div className={`analysis-block ${tone}`}>
+      <div className="analysis-block-head">
+        <div>
+          <h3>{title}</h3>
+          <p>{focus}</p>
+        </div>
+        <strong>{scoreText}</strong>
+      </div>
+      <div className="analysis-level">{level}</div>
+      <p className="analysis-copy">{description}</p>
+    </div>
+  );
+}
 
 function AdminAnswerSheet({ record, score }) {
   const jawapan = record.jawapan || {};

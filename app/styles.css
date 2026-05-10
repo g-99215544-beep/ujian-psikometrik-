@@ -345,6 +345,31 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 .td-body h4 { margin: 0 0 4px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
 .td-body p { margin: 0; color: var(--ink-2); font-size: 0.88rem; line-height: 1.5; }
 
+.analysis-card { margin-bottom: 24px; }
+.analysis-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
+}
+.analysis-block {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 12px;
+}
+.analysis-block-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.analysis-block h3 { margin: 0 0 4px; font-size: 1rem; }
+.analysis-block-head p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+.analysis-block-head strong { font-family: var(--font-mono); font-size: 1rem; white-space: nowrap; }
+.analysis-level {
+  width: fit-content; border-radius: 999px; padding: 5px 10px; font-size: 0.72rem;
+  font-weight: 800; border: 1px solid var(--line); background: var(--surface-2);
+}
+.analysis-copy { margin: 0; color: var(--ink-2); font-size: 0.88rem; line-height: 1.5; }
+.analysis-block.strong .analysis-level { background: oklch(0.94 0.07 150); color: oklch(0.30 0.14 150); border-color: oklch(0.82 0.10 150); }
+.analysis-block.good .analysis-level { background: oklch(0.94 0.05 250); color: oklch(0.35 0.12 250); border-color: oklch(0.82 0.08 250); }
+.analysis-block.fair .analysis-level { background: oklch(0.95 0.08 70); color: oklch(0.42 0.12 70); border-color: oklch(0.84 0.10 70); }
+.analysis-block.weak .analysis-level { background: oklch(0.95 0.06 25); color: oklch(0.38 0.16 25); border-color: oklch(0.84 0.10 25); }
+.analysis-block.profile .analysis-level { background: var(--accent-soft); color: var(--accent); border-color: oklch(0.82 0.08 250); }
+
 .answer-analysis-split {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
 }
@@ -483,6 +508,7 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   .pdf-question-image { max-width: 100%; }
   .pdf-answer-grid { grid-template-columns: repeat(4, minmax(48px, 1fr)); max-width: 100%; }
   .pdf-answer { min-height: 48px; }
+  .analysis-grid { grid-template-columns: 1fr; }
   .answer-analysis-split { grid-template-columns: 1fr; }
   .answer-analysis-row { grid-template-columns: 38px 1fr 66px; }
   .admin-header { flex-direction: column; }
