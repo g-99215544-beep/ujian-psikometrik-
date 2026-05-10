@@ -345,14 +345,32 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 .td-body h4 { margin: 0 0 4px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
 .td-body p { margin: 0; color: var(--ink-2); font-size: 0.88rem; line-height: 1.5; }
 
-.review-list { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow: auto; padding-right: 6px; }
-.review-row { display: grid; grid-template-columns: 32px 1fr auto auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 8px; font-size: 0.88rem; }
-.review-row .rno { font-family: var(--font-mono); color: var(--muted); font-weight: 700; }
-.review-row .rq { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.review-row .ra { font-family: var(--font-mono); font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.78rem; }
-.review-row.right .ra { background: oklch(0.94 0.07 150); color: oklch(0.30 0.14 150); }
-.review-row.wrong .ra { background: oklch(0.94 0.08 25); color: oklch(0.35 0.16 25); }
-.review-row .ck { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); }
+.answer-analysis-split {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
+}
+.answer-analysis-panel {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  overflow: hidden;
+}
+.answer-analysis-title {
+  background: #bfd7ee; color: #111; text-align: center; font-weight: 900;
+  padding: 9px 12px; letter-spacing: .04em; font-size: 0.86rem;
+}
+.answer-analysis-row {
+  display: grid; grid-template-columns: 42px 1fr 70px; gap: 10px; align-items: center;
+  padding: 8px 12px; border-top: 1px solid var(--line-2); font-size: 0.88rem;
+}
+.answer-analysis-row .rno { font-family: var(--font-mono); color: var(--ink); font-weight: 800; text-align: right; }
+.answer-bubbles { display: flex; gap: 7px; align-items: center; }
+.answer-bubble {
+  width: 25px; height: 25px; border: 1.8px solid var(--ink); border-radius: 50%;
+  display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 900;
+  color: var(--ink); background: #fff; line-height: 1;
+}
+.answer-bubble.selected { background: var(--ink); color: white; }
+.answer-correct { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); text-align: right; }
+.answer-analysis-row.right .answer-correct { color: oklch(0.38 0.13 150); }
+.answer-analysis-row.wrong .answer-correct { color: oklch(0.42 0.16 25); }
 
 .res-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
 
@@ -434,8 +452,15 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   font-size: 0.68rem; font-weight: 900; line-height: 1;
 }
 .sheet-box.selected, .sheet-circle.selected { background: #111; color: white; }
-.sheet-b-grid {
-  display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 10px 16px;
+.sheet-b-split {
+  display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 16px;
+}
+.sheet-b-panel {
+  border: 1.5px solid #111; padding: 8px 10px 10px;
+}
+.sheet-b-panel-title {
+  text-align: center; font-weight: 900; font-size: 0.72rem; margin-bottom: 8px;
+  border-bottom: 1.5px solid #111; padding-bottom: 6px;
 }
 .sheet-b-col { display: flex; flex-direction: column; gap: 10px; }
 .sheet-circle {
@@ -458,11 +483,14 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   .pdf-question-image { max-width: 100%; }
   .pdf-answer-grid { grid-template-columns: repeat(4, minmax(48px, 1fr)); max-width: 100%; }
   .pdf-answer { min-height: 48px; }
+  .answer-analysis-split { grid-template-columns: 1fr; }
+  .answer-analysis-row { grid-template-columns: 38px 1fr 66px; }
   .admin-header { flex-direction: column; }
   .admin-actions { justify-content: flex-start; }
   .admin-grid, .admin-stats { grid-template-columns: 1fr; }
   .sheet-toolbar, .sheet-info { grid-template-columns: 1fr; flex-direction: column; }
   .sheet-domain-strip { grid-template-columns: repeat(3, 1fr); }
+  .sheet-b-split { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

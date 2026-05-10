@@ -127,14 +127,24 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
           {/* Bahagian B review */}
           <div className="res-card">
             <h2>Semakan Jawapan Bahagian B</h2>
-            <p className="res-card-sub">Lihat jawapan anda berbanding jawapan rasmi.</p>
-            <div className="review-list">
-              {bResults.map(r => (
-                <div key={r.no} className={`review-row ${r.isRight ? 'right' : 'wrong'}`}>
-                  <div className="rno">{String(r.no).padStart(2,'0')}</div>
-                  <div className="rq" title={r.teks}>{r.teks}</div>
-                  <div className="ra">{r.userAns}</div>
-                  <div className="ck">jwp: {r.correct}</div>
+            <p className="res-card-sub">Format bulatan jawapan seperti borang jawapan, diasingkan kepada soalan 1-15 dan 16-30.</p>
+            <div className="answer-analysis-split">
+              {[bResults.slice(0, 15), bResults.slice(15, 30)].map((group, idx) => (
+                <div key={idx} className="answer-analysis-panel">
+                  <div className="answer-analysis-title">{idx === 0 ? 'Soalan 1 - 15' : 'Soalan 16 - 30'}</div>
+                  {group.map(r => (
+                    <div key={r.no} className={`answer-analysis-row ${r.isRight ? 'right' : 'wrong'}`}>
+                      <div className="rno">{String(r.no).padStart(2,'0')}</div>
+                      <div className="answer-bubbles">
+                        {['A', 'B', 'C', 'D'].map(choice => (
+                          <span key={choice} className={`answer-bubble ${r.userAns === choice ? 'selected' : ''}`}>
+                            {choice}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="answer-correct">jwp: {r.correct}</div>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

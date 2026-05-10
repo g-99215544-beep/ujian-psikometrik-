@@ -166,9 +166,10 @@ function AdminAnswerSheet({ record, score }) {
   const aColumns = Array.from({ length: 10 }, (_, col) =>
     Array.from({ length: 9 }, (_, row) => col * 9 + row + 1)
   );
-  const bColumns = Array.from({ length: 6 }, (_, col) =>
-    Array.from({ length: 5 }, (_, row) => row * 6 + col + 1)
-  );
+  const bGroups = [
+    { label: '1 - 15', items: Array.from({ length: 15 }, (_, idx) => idx + 1) },
+    { label: '16 - 30', items: Array.from({ length: 15 }, (_, idx) => idx + 16) },
+  ];
 
   const isASelected = (no, value) => jawapan[`A${no}`] === value;
   const isBSelected = (no, value) => jawapan[`B${no}`] === value;
@@ -216,10 +217,12 @@ function AdminAnswerSheet({ record, score }) {
       </div>
 
       <div className="sheet-section-title b">BAHAGIAN B</div>
-      <div className="sheet-b-grid">
-        {bColumns.map((column, colIdx) => (
-          <div key={colIdx} className="sheet-b-col">
-            {column.map(no => (
+      <div className="sheet-b-split">
+        {bGroups.map(group => (
+          <div key={group.label} className="sheet-b-panel">
+            <div className="sheet-b-panel-title">{group.label}</div>
+            <div className="sheet-b-col">
+            {group.items.map(no => (
               <div key={no} className="sheet-b-item">
                 <span className="sheet-no">{no}</span>
                 {['A', 'B', 'C', 'D'].map(choice => (
@@ -229,6 +232,7 @@ function AdminAnswerSheet({ record, score }) {
                 ))}
               </div>
             ))}
+            </div>
           </div>
         ))}
       </div>
