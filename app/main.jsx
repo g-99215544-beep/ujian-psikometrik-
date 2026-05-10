@@ -102,13 +102,20 @@ function App() {
     }
   };
 
-  const handleRestart = () => {
-    if (!window.confirm('Mula semula akan memadam semua jawapan. Teruskan?')) return;
+  const handleHome = () => {
     ['iat6.murid','iat6.jawapan','iat6.idx','iat6.route','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
     setMurid(null); setJawapan({}); setStartedAt(null); setTimeLeft(null); setRoute('welcome');
   };
 
-  const handlePrint = () => window.print();
+  const handlePrint = () => {
+    const prev = document.title;
+    const nama = murid ? murid.nama : '';
+    const tahun = instrument ? instrument.year : '';
+    const parts = ['Analisis Aptitud', nama, tahun ? `Tahun ${tahun}` : ''].filter(Boolean);
+    document.title = parts.join(' ');
+    window.print();
+    document.title = prev;
+  };
 
   const handleHomeFromExam = () => {
     if (!window.confirm('Kembali ke halaman utama? Jawapan semasa akan kekal disimpan dalam pelayar ini.')) return;
@@ -154,7 +161,7 @@ function App() {
   } else {
     return (
       <>
-        <window.ResultsScreen murid={murid} jawapan={jawapan} onRestart={handleRestart} onPrint={handlePrint} instrument={instrument} />
+        <window.ResultsScreen murid={murid} jawapan={jawapan} onHome={handleHome} instrument={instrument} />
         <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
       </>
     );

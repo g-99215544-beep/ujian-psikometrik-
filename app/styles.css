@@ -446,6 +446,32 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 }
 .admin-mini-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
 .admin-mini-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-class-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px;
+}
+.admin-student-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.admin-student-row {
+  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+}
+.admin-student-row.expanded { border-color: var(--accent); }
+.admin-student-row-head {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+  cursor: pointer; background: var(--surface-2); user-select: none;
+}
+.admin-student-row-head:hover { background: var(--line-2); }
+.admin-student-name { font-weight: 600; font-size: 0.9rem; flex-shrink: 0; }
+.admin-student-top { flex: 1; font-size: 0.8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-student-inst { font-size: 0.72rem; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 2px 7px; flex-shrink: 0; }
+.expand-caret { font-size: 0.65rem; color: var(--muted); flex-shrink: 0; }
+.admin-student-detail { padding: 16px; border-top: 1px solid var(--line); background: var(--bg); }
+.btn-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: var(--radius); border: 1px solid var(--line);
+  background: var(--surface); color: var(--fg); cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.btn-icon:hover { background: var(--surface-2); border-color: var(--accent); color: var(--accent); }
+.btn-icon-danger:hover { border-color: var(--err); color: var(--err); background: var(--surface); }
 .sheet-toolbar {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px;
 }
@@ -539,10 +565,12 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 
 /* Print */
 @media print {
-  .topbar, .res-actions, .tweaks-panel, .q-footer, .admin-header, .admin-card > .fld, .sheet-toolbar { display: none !important; }
+  .topbar, .res-actions, .tweaks-panel, .q-footer, .admin-header, .admin-card > .fld, .sheet-toolbar, .admin-class-header .btn-icon, .expand-caret { display: none !important; }
   body { background: white; }
   .admin-page, .admin-shell, .admin-card { padding: 0 !important; margin: 0 !important; border: 0 !important; box-shadow: none !important; }
   .admin-grid { display: none !important; }
+  .admin-student-row-head { display: none !important; }
+  .admin-student-detail { padding: 0 !important; border: none !important; }
   .answer-sheet { border: 0; padding: 10mm; overflow: visible; }
   @page { size: A4 landscape; margin: 8mm; }
 }
