@@ -1,6 +1,6 @@
 // === Keputusan (results) screen ===
 
-window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint, instrument }) {
+window.ResultsScreen = function ({ murid, jawapan, onHome, instrument }) {
   const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
   const domains = active.domains || window.INTELLIGENCES;
   const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
@@ -40,8 +40,12 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint, instrumen
           </div>
         </div>
         <div className="grow"></div>
-        <button className="btn" onClick={onPrint}>🖨 Cetak</button>
-        <button className="btn btn-ghost" onClick={onRestart}>Mula Semula</button>
+        <button className="btn-icon" onClick={onHome} title="Kembali ke halaman utama">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+        </button>
       </div>
 
       <div className="results">
@@ -148,10 +152,6 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint, instrumen
             </div>
           </div>}
 
-          <div className="res-actions">
-            <button className="btn btn-primary" onClick={onPrint}>🖨 Cetak / Simpan PDF</button>
-            <button className="btn" onClick={onRestart}>Mula Pentaksiran Baru</button>
-          </div>
         </div>
       </div>
     </div>

@@ -4,16 +4,17 @@ window.AdminScreen = function ({ onBack }) {
   const [password, setPassword] = React.useState('');
   const [authed, setAuthed] = React.useState(() => sessionStorage.getItem('iat6.admin') === '1');
   const [records, setRecords] = React.useState([]);
-  const [selectedIc, setSelectedIc] = React.useState('');
+  const [allMurid, setAllMurid] = React.useState([]);
+  const [selectedKelas, setSelectedKelas] = React.useState('');
+  const [expandedIc, setExpandedIc] = React.useState('');
+  const [printingAll, setPrintingAll] = React.useState(false);
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
+  const prevTitleRef = React.useRef('');
 
   const login = (e) => {
     e.preventDefault();
-    if (password !== 'admin123') {
-      setMessage('Kata laluan salah.');
-      return;
-    }
+    if (password !== 'admin123') { setMessage('Kata laluan salah.'); return; }
     sessionStorage.setItem('iat6.admin', '1');
     setAuthed(true);
     setMessage('');
@@ -27,9 +28,12 @@ window.AdminScreen = function ({ onBack }) {
     }
     setStatus('loading');
     try {
-      const rows = await window.StudentDirectory.listBorangJawapan();
+      const [rows, muridList] = await Promise.all([
+        window.StudentDirectory.listBorangJawapan(),
+        window.StudentDirectory.listAllMurid ? window.StudentDirectory.listAllMurid() : Promise.resolve([])
+      ]);
       setRecords(rows);
-      setSelectedIc(rows[0] ? rows[0].ic : '');
+      setAllMurid(muridList);
       setStatus('ready');
       setMessage(rows.length ? '' : 'Belum ada borang jawapan murid dihantar.');
     } catch (err) {
@@ -42,11 +46,62 @@ window.AdminScreen = function ({ onBack }) {
     if (authed) loadRecords();
   }, [authed, loadRecords]);
 
-  const selected = records.find(r => r.ic === selectedIc);
-  const selectedInstrument = selected && window.GetInstrumentForMurid ? window.GetInstrumentForMurid(selected.murid) : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
-  const score = selected && window.ScoreInstrument ? window.ScoreInstrument(selected.jawapan || {}, selectedInstrument) : (selected && window.ScoreIAT6 ? window.ScoreIAT6(selected.jawapan || {}) : null);
-  const selectedTotal = selectedInstrument ? selectedInstrument.sectionA.length + selectedInstrument.sectionB.length : 120;
-  const selectedTopLabel = selectedInstrument && selectedInstrument.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan';
+  // Group completed records by kelas
+  const completedByKelas = React.useMemo(() => {
+    const map = {};
+    records.forEach(r => {
+      const k = r.murid.kelas || 'Tiada Kelas';
+      if (!map[k]) map[k] = [];
+      map[k].push(r);
+    });
+    return map;
+  }, [records]);
+
+  // Total students per kelas from full registry
+  const totalByKelas = React.useMemo(() => {
+    const map = {};
+    allMurid.forEach(m => {
+      const k = m.kelas || 'Tiada Kelas';
+      map[k] = (map[k] || 0) + 1;
+    });
+    return map;
+  }, [allMurid]);
+
+  const classes = React.useMemo(() => {
+    const all = new Set([...Object.keys(completedByKelas), ...Object.keys(totalByKelas)]);
+    return [...all].sort();
+  }, [completedByKelas, totalByKelas]);
+
+  // Auto-select first class
+  React.useEffect(() => {
+    if (classes.length && !selectedKelas) setSelectedKelas(classes[0]);
+  }, [classes]);
+
+  const classRecords = completedByKelas[selectedKelas] || [];
+  const expandedRecord = classRecords.find(r => r.ic === expandedIc);
+  const expandedInstrument = expandedRecord && window.GetInstrumentForMurid
+    ? window.GetInstrumentForMurid(expandedRecord.murid)
+    : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+  const expandedScore = expandedRecord && window.ScoreInstrument
+    ? window.ScoreInstrument(expandedRecord.jawapan || {}, expandedInstrument)
+    : null;
+
+  // Print-all: trigger after render
+  React.useEffect(() => {
+    if (!printingAll) return;
+    const t = window.setTimeout(() => {
+      window.print();
+      document.title = prevTitleRef.current;
+      setPrintingAll(false);
+    }, 250);
+    return () => window.clearTimeout(t);
+  }, [printingAll]);
+
+  const handlePrintAll = () => {
+    prevTitleRef.current = document.title;
+    document.title = `Analisis Kelas ${selectedKelas}`;
+    setPrintingAll(true);
+  };
 
   if (!authed) {
     return (
@@ -57,13 +112,8 @@ window.AdminScreen = function ({ onBack }) {
           <form onSubmit={login}>
             <label className="fld">
               Kata Laluan
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="Masukkan kata laluan"
-                autoFocus
-              />
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                placeholder="Masukkan kata laluan" autoFocus />
             </label>
             {message && <div className="form-message error">{message}</div>}
             <div className="welcome-actions">
@@ -72,6 +122,31 @@ window.AdminScreen = function ({ onBack }) {
             </div>
           </form>
         </div>
+      </div>
+    );
+  }
+
+  // Print-all mode: render all sheets then auto-print
+  if (printingAll) {
+    return (
+      <div>
+        {classRecords.map(record => {
+          const inst = window.GetInstrumentForMurid
+            ? window.GetInstrumentForMurid(record.murid)
+            : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+          const sc = window.ScoreInstrument
+            ? window.ScoreInstrument(record.jawapan || {}, inst)
+            : null;
+          if (!sc) return null;
+          return (
+            <div key={record.ic} style={{ pageBreakAfter: 'always', marginBottom: 32 }}>
+              <AdminAnswerSheet record={record} score={sc} instrument={inst} />
+              <div style={{ marginTop: 24 }}>
+                <AdminAnalysis analysis={sc.analysis} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -96,76 +171,147 @@ window.AdminScreen = function ({ onBack }) {
           </div>
         </div>
 
+        {/* Class selector */}
         <div className="admin-card">
           <label className="fld">
-            Pilih Borang Jawapan Murid
-            <select value={selectedIc} onChange={e => setSelectedIc(e.target.value)} disabled={!records.length}>
-              {records.map(record => (
-                <option key={record.ic} value={record.ic}>
-                  {record.murid.nama} - {record.murid.kelas} ({window.GetInstrumentForMurid ? window.GetInstrumentForMurid(record.murid).shortTitle : 'IA Tahun 6'})
-                </option>
-              ))}
+            Pilih Kelas
+            <select value={selectedKelas} onChange={e => { setSelectedKelas(e.target.value); setExpandedIc(''); }}
+              disabled={!classes.length}>
+              {classes.map(k => {
+                const done = (completedByKelas[k] || []).length;
+                const total = totalByKelas[k] || done;
+                return <option key={k} value={k}>{k} {done}/{total}</option>;
+              })}
             </select>
           </label>
           {message && <div className={`form-message ${status === 'error' ? 'error' : ''}`}>{message}</div>}
         </div>
 
-        {selected && score && (
-          <>
-            <div className="admin-grid">
-              <div className="admin-card">
-                <h2>{selected.murid.nama}</h2>
-                <p className="res-card-sub">{selected.murid.kelas} - {selected.murid.sekolah}</p>
-                <div className="admin-stats">
-                  <div>
-                    <div className="meta-label">Dijawab</div>
-                    <div className="meta-val">{score.answeredCount}/{selectedTotal}</div>
-                  </div>
-                  <div>
-                    <div className="meta-label">Instrumen</div>
-                    <div className="meta-val">{selectedInstrument.shortTitle}</div>
-                  </div>
-                  <div>
-                    <div className="meta-label">Dihantar</div>
-                    <div className="meta-val">{selected.updatedAtIso ? new Date(selected.updatedAtIso).toLocaleString('ms-MY') : '-'}</div>
-                  </div>
-                </div>
+        {/* Student list for selected class */}
+        {selectedKelas && (
+          <div className="admin-card">
+            <div className="admin-class-header">
+              <div>
+                <h2>{selectedKelas}</h2>
+                <p className="res-card-sub">
+                  {classRecords.length} murid telah selesai
+                  {totalByKelas[selectedKelas] ? ` daripada ${totalByKelas[selectedKelas]}` : ''}
+                </p>
               </div>
-
-              <div className="admin-card">
-                <h2>{selectedTopLabel}</h2>
-                <div className="admin-mini-list">
-                  {score.top3.map((s, i) => (
-                    <div key={s.idx} className="admin-mini-row">
-                      <span>{i + 1}. {s.nama}</span>
-                      <strong>{s.ya}/{s.total}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {classRecords.length > 0 && (
+                <button className="btn-icon" onClick={handlePrintAll} title="Cetak semua analisis">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"/>
+                    <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                  </svg>
+                </button>
+              )}
             </div>
 
-            <div className="admin-card">
-              <div className="sheet-toolbar">
-                <div>
-                  <h2>Analisis Psikometrik</h2>
-                  <p className="res-card-sub">Tafsiran berdasarkan pola jawapan murid untuk instrumen ini.</p>
-                </div>
-              </div>
-              <AdminAnalysis analysis={score.analysis} />
-            </div>
+            {classRecords.length === 0
+              ? <p style={{ color: 'var(--muted)', marginTop: 12 }}>Tiada murid yang telah menghantar borang.</p>
+              : (
+                <div className="admin-student-list">
+                  {classRecords.map(record => {
+                    const inst = window.GetInstrumentForMurid
+                      ? window.GetInstrumentForMurid(record.murid)
+                      : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+                    const sc = window.ScoreInstrument
+                      ? window.ScoreInstrument(record.jawapan || {}, inst)
+                      : null;
+                    const isExpanded = expandedIc === record.ic;
+                    return (
+                      <div key={record.ic} className={`admin-student-row ${isExpanded ? 'expanded' : ''}`}>
+                        <div className="admin-student-row-head"
+                          onClick={() => setExpandedIc(isExpanded ? '' : record.ic)}>
+                          <span className="admin-student-name">{record.murid.nama}</span>
+                          {sc && (
+                            <span className="admin-student-top">
+                              {sc.top3.map(s => s.nama).join(' · ')}
+                            </span>
+                          )}
+                          <span className="admin-student-inst">{inst.shortTitle}</span>
+                          <button className="btn-icon btn-icon-danger" title="Padam rekod"
+                            onClick={e => {
+                              e.stopPropagation();
+                              if (!window.confirm(`Padam rekod ${record.murid.nama}? Tindakan ini tidak boleh dibatalkan.`)) return;
+                              window.StudentDirectory.deleteBorangJawapan(record.ic)
+                                .then(() => loadRecords())
+                                .catch(err => alert(err.message));
+                            }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3,6 5,6 21,6"/>
+                              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                              <path d="M10 11v6M14 11v6"/>
+                              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                            </svg>
+                          </button>
+                          <span className="expand-caret">{isExpanded ? '▲' : '▼'}</span>
+                        </div>
 
-            <div className="admin-card">
-              <div className="sheet-toolbar">
-                <div>
-                  <h2>Borang Jawapan</h2>
-                  <p className="res-card-sub">Format cetakan seperti borang jawapan rasmi.</p>
+                        {isExpanded && sc && (
+                          <div className="admin-student-detail">
+                            <div className="admin-grid">
+                              <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
+                                <h2>{record.murid.nama}</h2>
+                                <p className="res-card-sub">{record.murid.kelas} - {record.murid.sekolah}</p>
+                                <div className="admin-stats">
+                                  <div>
+                                    <div className="meta-label">Dijawab</div>
+                                    <div className="meta-val">{sc.answeredCount}/{inst.sectionA.length + inst.sectionB.length}</div>
+                                  </div>
+                                  <div>
+                                    <div className="meta-label">Instrumen</div>
+                                    <div className="meta-val">{inst.shortTitle}</div>
+                                  </div>
+                                  <div>
+                                    <div className="meta-label">Dihantar</div>
+                                    <div className="meta-val">{record.updatedAtIso ? new Date(record.updatedAtIso).toLocaleString('ms-MY') : '-'}</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
+                                <h2>{inst.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan'}</h2>
+                                <div className="admin-mini-list">
+                                  {sc.top3.map((s, i) => (
+                                    <div key={s.idx} className="admin-mini-row">
+                                      <span>{i + 1}. {s.nama}</span>
+                                      <strong>{s.ya}/{s.total}</strong>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            <AdminAnalysis analysis={sc.analysis} />
+
+                            <div style={{ marginTop: 16 }}>
+                              <div className="sheet-toolbar">
+                                <div>
+                                  <h2>Borang Jawapan</h2>
+                                  <p className="res-card-sub">Format cetakan seperti borang jawapan rasmi.</p>
+                                </div>
+                                <button className="btn" onClick={() => {
+                                  const prev = document.title;
+                                  document.title = `Analisis Aptitud ${record.murid.nama} Tahun ${inst.year}`;
+                                  window.print();
+                                  document.title = prev;
+                                }}>Cetak</button>
+                              </div>
+                              <AdminAnswerSheet record={record} score={sc} instrument={inst} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-                <button className="btn" onClick={() => window.print()}>Cetak Borang</button>
-              </div>
-              <AdminAnswerSheet record={selected} score={score} instrument={selectedInstrument} />
-            </div>
-          </>
+              )
+            }
+          </div>
         )}
       </div>
     </div>

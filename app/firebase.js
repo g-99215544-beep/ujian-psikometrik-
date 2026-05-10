@@ -98,5 +98,19 @@
   }
 
   window.UJIAN_DB_ROOT = ROOT;
-  window.StudentDirectory = { normalizeIc, findMuridByIc, saveBorangJawapan, listBorangJawapan };
+  async function deleteBorangJawapan(ic) {
+    if (!hasFirebase()) throw new Error('Firebase belum dimuatkan.');
+    const normalized = normalizeIc(ic);
+    if (!normalized) throw new Error('IC tidak sah.');
+    await firebase.database().ref(`${ROOT}/borangJawapanByIc/${normalized}`).remove();
+  }
+
+  async function listAllMurid() {
+    if (!hasFirebase()) throw new Error('Firebase belum dimuatkan.');
+    const snap = await firebase.database().ref(`${ROOT}/muridByIc`).get();
+    if (!snap.exists()) return [];
+    return Object.entries(snap.val()).map(([ic, value]) => ({ ic, ...value }));
+  }
+
+  window.StudentDirectory = { normalizeIc, findMuridByIc, saveBorangJawapan, listBorangJawapan, deleteBorangJawapan, listAllMurid };
 })();

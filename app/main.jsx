@@ -102,8 +102,7 @@ function App() {
     }
   };
 
-  const handleRestart = () => {
-    if (!window.confirm('Mula semula akan memadam semua jawapan. Teruskan?')) return;
+  const handleHome = () => {
     ['iat6.murid','iat6.jawapan','iat6.idx','iat6.route','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
     setMurid(null); setJawapan({}); setStartedAt(null); setTimeLeft(null); setRoute('welcome');
   };
@@ -162,7 +161,7 @@ function App() {
   } else {
     return (
       <>
-        <window.ResultsScreen murid={murid} jawapan={jawapan} onRestart={handleRestart} onPrint={handlePrint} instrument={instrument} />
+        <window.ResultsScreen murid={murid} jawapan={jawapan} onHome={handleHome} instrument={instrument} />
         <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
       </>
     );
