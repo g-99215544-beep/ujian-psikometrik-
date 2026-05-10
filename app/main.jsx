@@ -108,7 +108,13 @@ function App() {
     setMurid(null); setJawapan({}); setStartedAt(null); setTimeLeft(null); setRoute('welcome');
   };
 
-  const handlePrint = () => window.print();
+  const handlePrint = () => {
+    const prev = document.title;
+    const nama = murid ? murid.nama : '';
+    document.title = nama ? `Analisis Aptitud ${nama}` : 'Analisis Aptitud';
+    window.print();
+    document.title = prev;
+  };
 
   const handleHomeFromExam = () => {
     if (!window.confirm('Kembali ke halaman utama? Jawapan semasa akan kekal disimpan dalam pelayar ini.')) return;
