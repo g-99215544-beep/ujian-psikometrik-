@@ -1,13 +1,17 @@
 // === Ujian (exam) screen - handles both Bahagian A and B ===
 
-const TOTAL_A = 90;
-const TOTAL_B = 30;
+window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, tweaks, timeLeft, instrument }) {
+  const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
+  const sectionA = active.sectionA || [];
+  const sectionB = active.sectionB || [];
+  const totalA = sectionA.length;
+  const totalB = sectionB.length;
+  const totalQuestions = totalA + totalB;
+  const maxIdx = Math.max(totalQuestions - 1, 0);
 
-window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, tweaks, timeLeft }) {
-  // Flat question index: 0..89 -> Bhg A, 90..119 -> Bhg B
   const [idx, setIdx] = React.useState(() => {
     const saved = parseInt(localStorage.getItem('iat6.idx') || '0', 10);
-    return isNaN(saved) ? 0 : Math.min(saved, 119);
+    return isNaN(saved) ? 0 : Math.min(saved, maxIdx);
   });
   const [navDirection, setNavDirection] = React.useState('next');
 
@@ -16,26 +20,30 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [idx]);
 
-  const isA = idx < TOTAL_A;
+  React.useEffect(() => {
+    setIdx(prev => Math.min(prev, maxIdx));
+  }, [maxIdx]);
+
+  const isA = idx < totalA;
   const aIdx = idx;
-  const bIdx = idx - TOTAL_A;
-  const item = isA ? window.BAHAGIAN_A[aIdx] : window.BAHAGIAN_B[bIdx];
+  const bIdx = idx - totalA;
+  const item = isA ? sectionA[aIdx] : sectionB[bIdx];
   const key = isA ? `A${item.no}` : `B${item.no}`;
   const current = jawapan[key];
   const answeredCount = Object.keys(jawapan).length;
 
   const setAns = (val) => {
     setJawapan(j => ({ ...j, [key]: val }));
-    if (isA && idx < 119) {
+    if (isA && idx < maxIdx) {
       setNavDirection('next');
       window.setTimeout(() => {
-        setIdx(prev => prev === idx ? Math.min(idx + 1, 119) : prev);
+        setIdx(prev => prev === idx ? Math.min(idx + 1, maxIdx) : prev);
       }, 180);
     }
   };
 
   const goNext = () => {
-    if (idx < 119) {
+    if (idx < maxIdx) {
       setNavDirection('next');
       setIdx(idx + 1);
     }
@@ -71,7 +79,7 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
           <span className="home-icon" aria-hidden="true"></span>
         </button>
         <div className="brand-sub" style={{ marginRight: 12 }}>
-          {answeredCount}/120 dijawab
+          {answeredCount}/{totalQuestions} dijawab
         </div>
         {tweaks.timerOn && (
           <div className={`timer-pill ${timerClass}`}>
@@ -86,9 +94,9 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
           <div key={idx} className={`question-slide ${navDirection === 'prev' ? 'from-left' : 'from-right'}`}>
             <div className="q-meta">
               <span className="chip section">Bahagian {isA ? 'A' : 'B'}</span>
-              <span className="chip">Soalan {item.no} / {isA ? 90 : 30}</span>
+              <span className="chip">Soalan {item.no} / {isA ? totalA : totalB}</span>
               <span style={{ flex: 1 }}></span>
-              <span>{isA ? 'Inventori kecerdasan' : 'Penaakulan & Menyelesaikan masalah'}</span>
+              <span>{isA ? active.sectionALabel : active.sectionBName}</span>
             </div>
 
             {isA
@@ -101,9 +109,9 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
             <span className="q-footer-tip">
               {isA
                 ? 'Jawapan YA/TIDAK akan terus ke soalan seterusnya.'
-                : (!current ? 'Pilih satu jawapan untuk teruskan' : (idx === 119 ? 'Soalan terakhir - semak jawapan sebelum hantar' : 'Tekan Seterusnya'))}
+                : (!current ? 'Pilih satu jawapan untuk teruskan' : (idx === maxIdx ? 'Soalan terakhir - semak jawapan sebelum hantar' : 'Tekan Seterusnya'))}
             </span>
-            {idx === 119
+            {idx === maxIdx
               ? <button className="btn btn-accent" onClick={onComplete}>Tamatkan</button>
               : (!isA && <button className="btn btn-primary" onClick={goNext} disabled={!current}>Seterusnya &rarr;</button>)}
           </div>

@@ -134,12 +134,20 @@
     };
   }
 
-  function scoreIAT6(jawapan) {
+  function scoreInstrument(jawapan, instrument) {
     const answers = jawapan || {};
-    const intel = window.INTELLIGENCES || [];
+    const active = instrument || (window.INSTRUMENTS && window.INSTRUMENTS[6]) || {
+      domains: window.INTELLIGENCES || [],
+      sectionA: window.BAHAGIAN_A || [],
+      sectionB: window.BAHAGIAN_B || [],
+      kind: 'aptitude'
+    };
+    const domains = active.domains || [];
+    const sectionA = active.sectionA || [];
+    const sectionB = active.sectionB || [];
 
-    const aScores = intel.map((def, dIdx) => {
-      const items = window.BAHAGIAN_A.filter(q => q.domain === dIdx);
+    const aScores = domains.map((def, dIdx) => {
+      const items = sectionA.filter(q => q.domain === dIdx);
       const ya = items.filter(q => answers[`A${q.no}`] === 'YA').length;
       return {
         idx: dIdx,
@@ -153,7 +161,7 @@
       };
     });
 
-    const bResults = window.BAHAGIAN_B.map(q => {
+    const bResults = sectionB.map(q => {
       const userAns = answers[`B${q.no}`];
       return {
         no: q.no,
@@ -164,41 +172,42 @@
       };
     });
     const bRight = bResults.filter(r => r.isRight).length;
-    const bTotal = window.BAHAGIAN_B.length || 1;
+    const bTotal = sectionB.length;
     const bLevel = band(bRight, bTotal);
     const bPct = bLevel.pct;
     const top3 = [...aScores].sort((a, b) => b.ya - a.ya).slice(0, 3);
-    const bReasoning = bGroup(
+    const bReasoning = sectionB.length ? bGroup(
       bResults,
       1,
       15,
       'Bahagian B 1-15',
       'Penaakulan verbal, abstrak, visual dan logik pola.',
       'reasoning'
-    );
-    const bProblemSolving = bGroup(
+    ) : null;
+    const bProblemSolving = sectionB.length ? bGroup(
       bResults,
       16,
       30,
       'Bahagian B 16-30',
       'Penyelesaian masalah numerik dan aplikasi matematik harian.',
       'problem'
-    );
+    ) : null;
     const topDomainText = top3.length
       ? `Kecenderungan utama murid ialah ${top3.map(s => s.nama).join(', ')}.`
       : 'Kecenderungan domain belum dapat dikenal pasti.';
+    const isTraits = active.kind === 'traits';
     const analysis = {
       bahagianA: {
         title: 'Bahagian A',
-        focus: 'Inventori Kecerdasan Pelbagai.',
-        description: `${topDomainText} Bahagian ini menunjukkan kecenderungan minat dan kekuatan pembelajaran, bukan markah betul atau salah.`,
+        focus: active.sectionAName || (isTraits ? 'Inventori Tret Personaliti.' : 'Inventori Kecerdasan Pelbagai.'),
+        description: `${topDomainText} Bahagian ini menunjukkan ${isTraits ? 'kecenderungan tret personaliti' : 'kecenderungan minat dan kekuatan pembelajaran'}, bukan markah betul atau salah.`,
         topDomains: top3.map(s => ({
           nama: s.nama,
           ya: s.ya,
           total: s.total,
           pct: s.pct,
           deskripsi: s.deskripsi,
-          huraian: DOMAIN_HURAIAN[s.key] || []
+          huraian: DOMAIN_HURAIAN[s.key] || s.huraian || []
         }))
       },
       bReasoning,
@@ -217,6 +226,7 @@
 
     return {
       answeredCount: Object.keys(answers).length,
+      instrument: active,
       aScores,
       top3,
       bResults,
@@ -228,5 +238,10 @@
     };
   }
 
+  function scoreIAT6(jawapan) {
+    return scoreInstrument(jawapan, window.INSTRUMENTS && window.INSTRUMENTS[6]);
+  }
+
+  window.ScoreInstrument = scoreInstrument;
   window.ScoreIAT6 = scoreIAT6;
 })();
