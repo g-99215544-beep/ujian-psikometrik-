@@ -168,6 +168,7 @@ function AnalysisSummary({ analysis }) {
           tone="profile"
           focus={analysis.bahagianA.focus}
           description={analysis.bahagianA.description}
+          details={analysis.bahagianA.topDomains}
         />
         <AnalysisBlock
           title="Bahagian B 1-15"
@@ -190,7 +191,7 @@ function AnalysisSummary({ analysis }) {
   );
 }
 
-function AnalysisBlock({ title, scoreText, level, tone, focus, description }) {
+function AnalysisBlock({ title, scoreText, level, tone, focus, description, details }) {
   return (
     <div className={`analysis-block ${tone}`}>
       <div className="analysis-block-head">
@@ -202,6 +203,18 @@ function AnalysisBlock({ title, scoreText, level, tone, focus, description }) {
       </div>
       <div className="analysis-level">{level}</div>
       <p className="analysis-copy">{description}</p>
+      {details && details.length > 0 && (
+        <div className="analysis-details">
+          {details.map((domain, idx) => (
+            <div key={domain.nama} className="analysis-domain">
+              <h4>{idx + 1}. {domain.nama} <span>{domain.ya}/{domain.total}</span></h4>
+              <ul>
+                {domain.huraian.map(point => <li key={point}>{point}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

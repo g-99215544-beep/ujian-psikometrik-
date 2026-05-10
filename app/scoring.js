@@ -1,5 +1,89 @@
 // Shared scoring helpers for laporan murid and admin dashboard.
 (function () {
+  const DOMAIN_HURAIAN = {
+    intrapersonal: [
+      'Kenal diri sendiri - tahu apa yang disukai, tidak disukai dan apa yang mahu dicapai.',
+      'Yakin dengan kemampuan diri - tidak mudah goyah walaupun menerima kritikan.',
+      'Stabil emosi - tenang, sabar dan tahu cara mengawal marah atau kecewa.',
+      'Ada matlamat hidup - tahu hala tuju dan berusaha mencapainya.',
+      'Reflektif - suka menilai semula pengalaman untuk belajar daripadanya.',
+      'Bertanggungjawab atas tindakan sendiri - tidak suka menyalahkan orang lain.',
+      'Independen - boleh membuat keputusan sendiri dengan yakin.'
+    ],
+    kinestetik: [
+      'Aktif dan bertenaga - sukakan aktiviti fizikal, sukan dan pergerakan.',
+      "Belajar melalui pengalaman - lebih faham bila boleh 'buat sendiri'.",
+      'Ekspresif - gunakan bahasa tubuh atau gerak isyarat semasa bercakap.',
+      'Cekap koordinasi motor - pandai dalam sukan, tarian, lakonan atau aktiviti kemahiran tangan.',
+      'Tidak suka duduk lama - cepat bosan dengan aktiviti pasif.',
+      'Suka membina atau mencipta - gemar aktiviti DIY, eksperimen dan kerja tangan.',
+      'Peka terhadap deria tubuh.'
+    ],
+    logik: [
+      'Suka nombor dan pola - gemar mengira, menganalisis data dan melihat corak tersembunyi.',
+      'Berfikiran logik - sentiasa mencari sebab dan bukti sebelum membuat keputusan.',
+      'Suka menyelesaikan masalah - gemar teka-teki, strategi dan cabaran intelek.',
+      'Struktur dan teratur - suka benda yang sistematik dan langkah demi langkah.',
+      'Analitikal - mampu menganalisis situasi secara objektif.',
+      'Kreatif secara logik - boleh cipta penyelesaian baharu yang masuk akal.',
+      'Minat dalam bidang sains, matematik, teknologi dan komputer.'
+    ],
+    naturalis: [
+      'Cinta alam sekitar - suka tumbuhan, haiwan dan isu alam sekitar.',
+      'Suka aktiviti luar - gemar berkebun, berkhemah dan meneroka hutan.',
+      'Pemerhati alam yang baik - cepat perasan perubahan cuaca, bunyi dan bau alam.',
+      'Prihatin terhadap kelestarian - suka menjaga kebersihan dan alam semula jadi.',
+      'Minat biologi atau pertanian - suka eksperimen berkaitan tumbuhan atau haiwan.',
+      'Tenang di alam semula jadi - rasa damai bila berada di luar.',
+      'Suka menjaga makhluk hidup - contohnya haiwan peliharaan.'
+    ],
+    visual: [
+      'Berfikir dalam bentuk imej - mudah membayangkan sesuatu dalam kepala.',
+      'Pandai melihat corak dan hubungan ruang - mudah faham peta, rajah dan arah.',
+      'Kreatif dalam reka bentuk - suka melukis, menghias dan membina model.',
+      'Belajar melalui pemerhatian - cepat faham bila melihat gambar atau tayangan.',
+      'Imaginatif - mampu menghasilkan idea baharu yang unik dan menarik.',
+      'Peka terhadap bentuk, warna dan susunan.',
+      'Cenderung kepada seni visual, grafik, fotografi dan reka bentuk.'
+    ],
+    linguistik: [
+      'Petah bercakap - mudah mengungkapkan idea dengan jelas dan menarik.',
+      'Suka membaca dan menulis - gemar buku, novel, puisi atau esei.',
+      'Kaya kosa kata - menggunakan perkataan yang tepat dan berkesan.',
+      'Faham cepat melalui bahasa - mudah memahami maklumat bertulis atau lisan.',
+      'Suka aktiviti bahasa - seperti debat, pidato, syarahan dan drama.',
+      'Mampu memujuk atau meyakinkan orang lain melalui kata-kata.',
+      'Kreatif dengan perkataan - pandai bermain bahasa dan penulisan cerita.'
+    ],
+    muzik: [
+      'Suka menyanyi atau bersenandung walaupun tanpa muzik.',
+      'Peka terhadap bunyi dan irama di sekeliling.',
+      'Gemar mendengar muzik semasa belajar atau berehat.',
+      'Suka bermain alat muzik atau mencuba rentak baharu.',
+      'Pandai mengikut rentak, irama dan melodi dengan tepat.',
+      'Suka mencipta lagu, lirik atau menggubah rentak sendiri.',
+      'Belajar lebih baik apabila pelajaran dikaitkan dengan muzik atau irama.',
+      'Suka menyertai aktiviti seperti koir, nasyid, band sekolah atau persembahan pentas.'
+    ],
+    eksistensial: [
+      'Yakin diri - berani bercakap di hadapan orang ramai.',
+      'Suka menjadi perhatian - seronok bila orang lain memberi pujian atau tumpuan.',
+      'Pandai bergaul - cepat mesra dan aktif dalam kumpulan.',
+      'Suka tampil di khalayak - minat pertandingan bercerita, pidato atau kepimpinan.',
+      'Ada pendapat tersendiri - suka memberi pandangan dan tidak mudah ikut arus.',
+      'Berorientasikan kepimpinan sosial - mahu dihargai dan menjadi individu berpengaruh.'
+    ],
+    interpersonal: [
+      'Mesra dan mudah bergaul - cepat menyesuaikan diri dalam kumpulan baharu.',
+      'Komunikasi baik - pandai mendengar dan memberi respons sopan.',
+      'Empati tinggi - peka terhadap perasaan dan keperluan orang lain.',
+      'Suka bekerjasama - lebih gemar tugasan berkumpulan.',
+      'Penyayang dan prihatin - menunjukkan belas kasihan kepada rakan atau orang susah.',
+      'Disukai ramai - mempunyai ramai kawan dan sering dijadikan tempat rujukan sosial.',
+      'Suka membantu - cepat menawarkan bantuan tanpa disuruh.'
+    ]
+  };
+
   function band(score, total) {
     const pct = total ? Math.round((score / total) * 100) : 0;
     if (pct >= 80) return { label: 'Cemerlang', pct, tone: 'strong' };
@@ -113,7 +197,8 @@
           ya: s.ya,
           total: s.total,
           pct: s.pct,
-          deskripsi: s.deskripsi
+          deskripsi: s.deskripsi,
+          huraian: DOMAIN_HURAIAN[s.key] || []
         }))
       },
       bReasoning,
