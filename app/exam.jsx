@@ -134,19 +134,35 @@ function BahagianAItem({ item, value, onChange }) {
 
 function BahagianBItem({ item, value, onChange }) {
   const Visual = window.QuestionVisual;
+  const hasPdfImage = Boolean(item.pdfImage);
   return (
     <>
-      <p className="q-stem">{item.teks}</p>
-      {item.visual && <Visual kind={item.visual} />}
-      <div className="choices">
+      {hasPdfImage ? (
+        <div className="pdf-question-wrap">
+          <img className="pdf-question-image" src={item.pdfImage} alt={`Bahagian B soalan ${item.no}`} loading="lazy" />
+        </div>
+      ) : (
+        <>
+          <p className="q-stem">{item.teks}</p>
+          {item.visual && <Visual kind={item.visual} />}
+        </>
+      )}
+      <div className={hasPdfImage ? 'pdf-answer-grid' : 'choices'}>
         {item.pilihan.map((p, i) => {
           const k = ['A', 'B', 'C', 'D'][i];
           return (
             <button key={k}
-              className={`choice ${value === k ? 'selected' : ''}`}
-              onClick={() => onChange(k)}>
-              <span className="choice-key">{k}</span>
-              <span className="choice-text">{p}</span>
+              className={hasPdfImage ? `pdf-answer ${value === k ? 'selected' : ''}` : `choice ${value === k ? 'selected' : ''}`}
+              onClick={() => onChange(k)}
+              aria-label={`Jawapan ${k}: ${p}`}>
+              {hasPdfImage ? (
+                k
+              ) : (
+                <>
+                  <span className="choice-key">{k}</span>
+                  <span className="choice-text">{p}</span>
+                </>
+              )}
             </button>
           );
         })}
