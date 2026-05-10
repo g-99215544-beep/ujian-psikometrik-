@@ -43,7 +43,10 @@ window.AdminScreen = function ({ onBack }) {
   }, [authed, loadRecords]);
 
   const selected = records.find(r => r.ic === selectedIc);
-  const score = selected && window.ScoreIAT6 ? window.ScoreIAT6(selected.jawapan || {}) : null;
+  const selectedInstrument = selected && window.GetInstrumentForMurid ? window.GetInstrumentForMurid(selected.murid) : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+  const score = selected && window.ScoreInstrument ? window.ScoreInstrument(selected.jawapan || {}, selectedInstrument) : (selected && window.ScoreIAT6 ? window.ScoreIAT6(selected.jawapan || {}) : null);
+  const selectedTotal = selectedInstrument ? selectedInstrument.sectionA.length + selectedInstrument.sectionB.length : 120;
+  const selectedTopLabel = selectedInstrument && selectedInstrument.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan';
 
   if (!authed) {
     return (
@@ -99,7 +102,7 @@ window.AdminScreen = function ({ onBack }) {
             <select value={selectedIc} onChange={e => setSelectedIc(e.target.value)} disabled={!records.length}>
               {records.map(record => (
                 <option key={record.ic} value={record.ic}>
-                  {record.murid.nama} - {record.murid.kelas} ({record.summary && record.summary.bRight != null ? record.summary.bRight : 0}/30)
+                  {record.murid.nama} - {record.murid.kelas} ({window.GetInstrumentForMurid ? window.GetInstrumentForMurid(record.murid).shortTitle : 'IA Tahun 6'})
                 </option>
               ))}
             </select>
@@ -116,11 +119,11 @@ window.AdminScreen = function ({ onBack }) {
                 <div className="admin-stats">
                   <div>
                     <div className="meta-label">Dijawab</div>
-                    <div className="meta-val">{score.answeredCount}/120</div>
+                    <div className="meta-val">{score.answeredCount}/{selectedTotal}</div>
                   </div>
                   <div>
-                    <div className="meta-label">Bahagian B</div>
-                    <div className="meta-val">{score.bRight}/30 ({score.bPct}%)</div>
+                    <div className="meta-label">Instrumen</div>
+                    <div className="meta-val">{selectedInstrument.shortTitle}</div>
                   </div>
                   <div>
                     <div className="meta-label">Dihantar</div>
@@ -130,12 +133,12 @@ window.AdminScreen = function ({ onBack }) {
               </div>
 
               <div className="admin-card">
-                <h2>3 Kecerdasan Dominan</h2>
+                <h2>{selectedTopLabel}</h2>
                 <div className="admin-mini-list">
                   {score.top3.map((s, i) => (
                     <div key={s.idx} className="admin-mini-row">
                       <span>{i + 1}. {s.nama}</span>
-                      <strong>{s.ya}/10</strong>
+                      <strong>{s.ya}/{s.total}</strong>
                     </div>
                   ))}
                 </div>
@@ -146,7 +149,7 @@ window.AdminScreen = function ({ onBack }) {
               <div className="sheet-toolbar">
                 <div>
                   <h2>Analisis Psikometrik</h2>
-                  <p className="res-card-sub">Tafsiran Bahagian A, Bahagian B 1-15 dan Bahagian B 16-30 untuk murid ini.</p>
+                  <p className="res-card-sub">Tafsiran berdasarkan pola jawapan murid untuk instrumen ini.</p>
                 </div>
               </div>
               <AdminAnalysis analysis={score.analysis} />
@@ -160,7 +163,7 @@ window.AdminScreen = function ({ onBack }) {
                 </div>
                 <button className="btn" onClick={() => window.print()}>Cetak Borang</button>
               </div>
-              <AdminAnswerSheet record={selected} score={score} />
+              <AdminAnswerSheet record={selected} score={score} instrument={selectedInstrument} />
             </div>
           </>
         )}
@@ -170,33 +173,34 @@ window.AdminScreen = function ({ onBack }) {
 };
 
 function AdminAnalysis({ analysis }) {
+  const top = analysis.bahagianA.topDomains[0];
   return (
     <div className="analysis-grid admin-analysis-grid">
       <AdminAnalysisBlock
         title="Bahagian A"
-        scoreText={`${analysis.bahagianA.topDomains.length ? analysis.bahagianA.topDomains[0].ya : 0}/10 domain utama`}
-        level="Profil Kecerdasan"
+        scoreText={top ? `${top.ya}/${top.total} domain utama` : '0/0 domain utama'}
+        level={analysis.bahagianA.focus.includes('Tret') ? 'Profil Tret' : 'Profil Kecerdasan'}
         tone="profile"
         focus={analysis.bahagianA.focus}
         description={analysis.bahagianA.description}
         details={analysis.bahagianA.topDomains}
       />
-      <AdminAnalysisBlock
+      {analysis.bReasoning && <AdminAnalysisBlock
         title="Bahagian B 1-15"
         scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
         level={analysis.bReasoning.level}
         tone={analysis.bReasoning.tone}
         focus={analysis.bReasoning.focus}
         description={analysis.bReasoning.description}
-      />
-      <AdminAnalysisBlock
+      />}
+      {analysis.bProblemSolving && <AdminAnalysisBlock
         title="Bahagian B 16-30"
         scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
         level={analysis.bProblemSolving.level}
         tone={analysis.bProblemSolving.tone}
         focus={analysis.bProblemSolving.focus}
         description={analysis.bProblemSolving.description}
-      />
+      />}
     </div>
   );
 }
@@ -229,12 +233,17 @@ function AdminAnalysisBlock({ title, scoreText, level, tone, focus, description,
   );
 }
 
-function AdminAnswerSheet({ record, score }) {
+function AdminAnswerSheet({ record, score, instrument }) {
   const jawapan = record.jawapan || {};
   const murid = record.murid || {};
-  const domains = window.INTELLIGENCES || [];
+  const active = instrument || score.instrument || (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+  const domains = active.domains || window.INTELLIGENCES || [];
+  const sectionA = active.sectionA || [];
+  const sectionB = active.sectionB || [];
+  const rowsPerColumn = Math.ceil(sectionA.length / 10);
   const aColumns = Array.from({ length: 10 }, (_, col) =>
-    Array.from({ length: 9 }, (_, row) => col * 9 + row + 1)
+    Array.from({ length: rowsPerColumn }, (_, row) => col * rowsPerColumn + row + 1)
+      .filter(no => no <= sectionA.length)
   );
   const bGroups = [
     { label: '1 - 15', items: Array.from({ length: 15 }, (_, idx) => idx + 1) },
@@ -249,7 +258,7 @@ function AdminAnswerSheet({ record, score }) {
       <div className="sheet-head">
         <div className="sheet-title">
           <strong>KEMENTERIAN PENDIDIKAN</strong>
-          <span>PENTAKSIRAN PSIKOMETRIK (INSTRUMEN APTITUD TAHUN 6)</span>
+          <span>PENTAKSIRAN PSIKOMETRIK ({active.title.toUpperCase()})</span>
         </div>
         <div className="sheet-box-title">BORANG<br />JAWAPAN</div>
       </div>
@@ -260,14 +269,14 @@ function AdminAnswerSheet({ record, score }) {
         <label>NAMA SEKOLAH <span>{murid.sekolah || 'SK Sri Aman'}</span></label>
       </div>
 
-      <div className="sheet-section-title">BAHAGIAN A</div>
-      <div className="sheet-domain-strip">
+      <div className="sheet-section-title">BAHAGIAN A - {active.sectionAName}</div>
+      <div className="sheet-domain-strip" style={{ gridTemplateColumns: `repeat(${domains.length}, minmax(44px, 1fr))` }}>
         {domains.map((domain, idx) => {
           const domainScore = score.aScores.find(s => s.idx === idx);
           return (
             <div key={domain.key || idx}>
               <span>{domain.nama.toUpperCase()}</span>
-              <strong>{domainScore ? domainScore.ya : 0}/10</strong>
+              <strong>{domainScore ? domainScore.ya : 0}/{domainScore ? domainScore.total : 0}</strong>
             </div>
           );
         })}
@@ -286,6 +295,7 @@ function AdminAnswerSheet({ record, score }) {
         ))}
       </div>
 
+      {sectionB.length > 0 && <>
       <div className="sheet-section-title b">BAHAGIAN B</div>
       <div className="sheet-b-split">
         {bGroups.map(group => (
@@ -306,6 +316,7 @@ function AdminAnswerSheet({ record, score }) {
           </div>
         ))}
       </div>
+      </>}
     </div>
   );
 }

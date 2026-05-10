@@ -7,7 +7,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "default"
 }/*EDITMODE-END*/;
 
-const TOTAL_DURATION = 90 * 60; // 1h 30m in seconds
+const DEFAULT_DURATION = 90 * 60; // Tahun 6 default: 1j 30m
 
 function loadJawapan() {
   try { return JSON.parse(localStorage.getItem('iat6.jawapan') || '{}'); } catch { return {}; }
@@ -40,6 +40,8 @@ function App() {
     return s ? parseInt(s, 10) : null;
   });
   const [timeLeft, setTimeLeft] = useState(null);
+  const instrument = window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : null;
+  const duration = (instrument && instrument.duration) || DEFAULT_DURATION;
 
   useEffect(() => {
     if (route !== 'admin') localStorage.setItem('iat6.route', route);
@@ -64,7 +66,7 @@ function App() {
     }
     const tick = () => {
       const elapsed = Math.floor((Date.now() - (startedAt || Date.now())) / 1000);
-      const remaining = TOTAL_DURATION - elapsed;
+      const remaining = duration - elapsed;
       setTimeLeft(Math.max(0, remaining));
       if (remaining <= 0) {
         setRoute('keputusan');
@@ -73,7 +75,7 @@ function App() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [route, startedAt, tweaks.timerOn]);
+  }, [route, startedAt, tweaks.timerOn, duration]);
 
   const handleStart = (data) => {
     ['iat6.jawapan','iat6.idx','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
@@ -132,7 +134,7 @@ function App() {
   } else if (route === 'welcome' || !murid) {
     view = <window.WelcomeScreen onStart={handleStart} />;
   } else if (route === 'arahan') {
-    view = <window.ArahanScreen onContinue={handleBeginExam} onBack={() => setRoute('welcome')} />;
+    view = <window.ArahanScreen onContinue={handleBeginExam} onBack={() => setRoute('welcome')} instrument={instrument} />;
   } else if (route === 'ujian') {
     return (
       <div className="app">
@@ -144,15 +146,16 @@ function App() {
           onHome={handleHomeFromExam}
           tweaks={tweaks}
           timeLeft={timeLeft}
+          instrument={instrument}
         />
-        <TweaksUI tweaks={tweaks} setTweak={setTweak} />
+        <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
       </div>
     );
   } else {
     return (
       <>
-        <window.ResultsScreen murid={murid} jawapan={jawapan} onRestart={handleRestart} onPrint={handlePrint} />
-        <TweaksUI tweaks={tweaks} setTweak={setTweak} />
+        <window.ResultsScreen murid={murid} jawapan={jawapan} onRestart={handleRestart} onPrint={handlePrint} instrument={instrument} />
+        <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
       </>
     );
   }
@@ -164,26 +167,27 @@ function App() {
           <div className="brand-mark">Ψ</div>
           <div>
             <div className="brand-name">Pentaksiran Psikometrik</div>
-            <div className="brand-sub">Instrumen Aptitud Tahun 6</div>
+            <div className="brand-sub">{instrument ? instrument.title : 'Pentaksiran Psikometrik'}</div>
           </div>
         </div>
         <div className="grow"></div>
         <button className="btn btn-ghost" onClick={openAdmin}>Admin</button>
       </div>
       {view}
-      <TweaksUI tweaks={tweaks} setTweak={setTweak} />
+      <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
     </div>
   );
 }
 
 // === Tweaks UI ===
-function TweaksUI({ tweaks, setTweak }) {
+function TweaksUI({ tweaks, setTweak, duration }) {
   const TP = window.TweaksPanel;
   if (!TP) return null;
+  const minutes = Math.round((duration || DEFAULT_DURATION) / 60);
   return (
     <TP title="Tweaks">
       <window.TweakSection title="Pemasa">
-        <window.TweakToggle label="Hidupkan pemasa 1j 30m" value={tweaks.timerOn} onChange={v => setTweak('timerOn', v)} />
+        <window.TweakToggle label={`Hidupkan pemasa ${minutes} minit`} value={tweaks.timerOn} onChange={v => setTweak('timerOn', v)} />
       </window.TweakSection>
       <window.TweakSection title="Saiz teks">
         <window.TweakRadio

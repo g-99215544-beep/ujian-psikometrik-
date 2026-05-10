@@ -1,20 +1,23 @@
 // === Keputusan (results) screen ===
 
-window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
-  const intel = window.INTELLIGENCES;
-  const score = window.ScoreIAT6(jawapan);
+window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint, instrument }) {
+  const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
+  const domains = active.domains || window.INTELLIGENCES;
+  const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
   const aScores = score.aScores;
   const top3 = score.top3;
   const bResults = score.bResults;
   const bRight = score.bRight;
   const bPct = score.bPct;
   const analysis = score.analysis;
+  const hasB = bResults.length > 0;
+  const topLabel = active.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan';
 
   const tarikh = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
 
   React.useEffect(() => {
     if (!window.StudentDirectory || !window.StudentDirectory.saveBorangJawapan || !window.ScoreIAT6) return;
-    const score = window.ScoreIAT6(jawapan);
+    const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
     window.StudentDirectory.saveBorangJawapan(murid, jawapan, {
       answeredCount: score.answeredCount,
       bRight: score.bRight,
@@ -44,22 +47,22 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
       <div className="results">
         <div className="results-inner">
           <div className="res-hero">
-            <div className="res-hero-eyebrow">Laporan Keputusan · IA_T6 · {tarikh}</div>
-            <h1>Profil aptitud {murid.nama.split(' ')[0]}.</h1>
+            <div className="res-hero-eyebrow">Laporan Keputusan · {active.code} · {tarikh}</div>
+            <h1>Profil psikometrik {murid.nama.split(' ')[0]}.</h1>
             <p className="res-hero-meta">
-              Berdasarkan <strong>120 soalan</strong> dijawab, berikut ialah profil kecerdasan pelbagai
-              dan skor penaakulan anda.
+              Berdasarkan <strong>{active.sectionA.length + active.sectionB.length} soalan</strong> dijawab,
+              berikut ialah analisis pentaksiran anda.
             </p>
           </div>
 
           <div className="res-grid">
             {/* Bahagian A — 9 intelligences bar chart */}
             <div className="res-card">
-              <h2>Bahagian A · Profil Kecerdasan Pelbagai</h2>
-              <p className="res-card-sub">Bilangan jawapan YA bagi setiap domain (maksimum 10).</p>
+              <h2>Bahagian A · {active.sectionAName}</h2>
+              <p className="res-card-sub">Bilangan jawapan YA bagi setiap domain.</p>
               <div className="bar-list">
                 {aScores.map((s) => {
-                  const def = intel[s.idx];
+                  const def = domains[s.idx];
                   return (
                     <div key={s.idx} className="bar-row">
                       <div className="bar-name">
@@ -69,23 +72,23 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
                       <div className="bar-track">
                         <div className="bar-fill" style={{ width: `${s.pct}%`, background: def.warna }}></div>
                       </div>
-                      <div className="bar-val">{s.ya}/10</div>
+                      <div className="bar-val">{s.ya}/{s.total}</div>
                     </div>
                   );
                 })}
               </div>
 
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', marginTop: 28, marginBottom: 0 }}>3 Kecerdasan Dominan</h3>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', marginTop: 28, marginBottom: 0 }}>{topLabel}</h3>
               <div className="top-domains">
                 {top3.map((s, i) => {
-                  const def = intel[s.idx];
+                  const def = domains[s.idx];
                   return (
                     <div key={s.idx} className="top-domain">
                       <div className="td-num">{i+1}</div>
                       <div className="td-body">
                         <h4>
                           <span className="bdot" style={{ background: def.warna, width: 10, height: 10, borderRadius: '50%', display: 'inline-block' }}></span>
-                          {def.nama} <span style={{ color: 'var(--muted)', fontWeight: 500, fontSize: '0.85rem', marginLeft: 6 }}>({s.ya}/10)</span>
+                          {def.nama} <span style={{ color: 'var(--muted)', fontWeight: 500, fontSize: '0.85rem', marginLeft: 6 }}>({s.ya}/{s.total})</span>
                         </h4>
                         <p>{def.deskripsi}</p>
                       </div>
@@ -96,10 +99,10 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
             </div>
 
             {/* Bahagian B — score */}
-            <div className="res-card">
+            {hasB && <div className="res-card">
               <h2>Bahagian B · Skor Penaakulan</h2>
               <p className="res-card-sub">Soalan kemahiran menaakul &amp; menyelesaikan masalah.</p>
-              <p className="score-big">{bRight}<small>/30</small></p>
+              <p className="score-big">{bRight}<small>/{bResults.length}</small></p>
               <p className="score-cap">
                 {bPct >= 80 ? 'Cemerlang — anda menjawab majoriti soalan dengan tepat.' :
                  bPct >= 60 ? 'Baik — anda menunjukkan kemahiran penaakulan yang kukuh.' :
@@ -111,16 +114,16 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
               </div>
               <div style={{ display: 'flex', gap: 16, marginTop: 20, fontSize: '0.85rem', color: 'var(--muted)' }}>
                 <div><strong style={{ color: 'var(--ok)' }}>● {bRight}</strong> betul</div>
-                <div><strong style={{ color: 'var(--err)' }}>● {30 - bRight}</strong> salah / kosong</div>
+                <div><strong style={{ color: 'var(--err)' }}>● {bResults.length - bRight}</strong> salah / kosong</div>
                 <div><strong>{bPct}%</strong></div>
               </div>
-            </div>
+            </div>}
           </div>
 
           <AnalysisSummary analysis={analysis} />
 
           {/* Bahagian B review */}
-          <div className="res-card">
+          {hasB && <div className="res-card">
             <h2>Semakan Jawapan Bahagian B</h2>
             <p className="res-card-sub">Format bulatan jawapan seperti borang jawapan, diasingkan kepada soalan 1-15 dan 16-30.</p>
             <div className="answer-analysis-split">
@@ -143,7 +146,7 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div>}
 
           <div className="res-actions">
             <button className="btn btn-primary" onClick={onPrint}>🖨 Cetak / Simpan PDF</button>
@@ -156,6 +159,7 @@ window.ResultsScreen = function ({ murid, jawapan, onRestart, onPrint }) {
 };
 
 function AnalysisSummary({ analysis }) {
+  const top = analysis.bahagianA.topDomains[0];
   return (
     <div className="res-card analysis-card">
       <h2>Analisis Psikometrik</h2>
@@ -163,29 +167,29 @@ function AnalysisSummary({ analysis }) {
       <div className="analysis-grid">
         <AnalysisBlock
           title="Bahagian A"
-          scoreText={`${analysis.bahagianA.topDomains.length ? analysis.bahagianA.topDomains[0].ya : 0}/10 domain utama`}
-          level="Profil Kecerdasan"
+          scoreText={top ? `${top.ya}/${top.total} domain utama` : '0/0 domain utama'}
+          level={analysis.bahagianA.focus.includes('Tret') ? 'Profil Tret' : 'Profil Kecerdasan'}
           tone="profile"
           focus={analysis.bahagianA.focus}
           description={analysis.bahagianA.description}
           details={analysis.bahagianA.topDomains}
         />
-        <AnalysisBlock
+        {analysis.bReasoning && <AnalysisBlock
           title="Bahagian B 1-15"
           scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
           level={analysis.bReasoning.level}
           tone={analysis.bReasoning.tone}
           focus={analysis.bReasoning.focus}
           description={analysis.bReasoning.description}
-        />
-        <AnalysisBlock
+        />}
+        {analysis.bProblemSolving && <AnalysisBlock
           title="Bahagian B 16-30"
           scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
           level={analysis.bProblemSolving.level}
           tone={analysis.bProblemSolving.tone}
           focus={analysis.bProblemSolving.focus}
           description={analysis.bProblemSolving.description}
-        />
+        />}
       </div>
     </div>
   );
