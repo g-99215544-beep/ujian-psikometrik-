@@ -20,6 +20,7 @@ TRAITS_T4 = [
     ("intelektual", "Intelektual"),
     ("kepemimpinan", "Kepemimpinan"),
     ("struktur", "Struktur"),
+    ("daya_tahan", "Daya Tahan"),
     ("menolong", "Menolong"),
     ("analitikal", "Analitikal"),
     ("kritik_diri", "Kritik Diri"),
@@ -37,6 +38,7 @@ TRAIT_DESCRIPTIONS = {
     "intelektual": "Cenderung mencari ilmu, memahami konsep dan meneroka maklumat baharu.",
     "kepemimpinan": "Cenderung memimpin, memberi arahan dan menggerakkan kumpulan.",
     "struktur": "Cenderung menyukai peraturan, susunan, rutin dan kerja yang terancang.",
+    "daya_tahan": "Cenderung tabah, gigih dan mampu bangkit semula apabila menghadapi cabaran atau kegagalan.",
     "menolong": "Cenderung prihatin, simpati dan suka membantu orang lain.",
     "analitikal": "Cenderung menilai fakta, membandingkan maklumat dan berfikir sebelum bertindak.",
     "kritik_diri": "Cenderung menilai diri secara kritikal dan mudah meragui kemampuan sendiri.",
@@ -54,6 +56,7 @@ TRAIT_COLORS = [
     "#9333EA",
     "#EA580C",
     "#475569",
+    "#0EA5E9",
     "#16A34A",
     "#0F766E",
     "#BE123C",
@@ -81,7 +84,7 @@ def parse_t4_items():
                     "domain": (no - 1) % len(TRAITS_T4),
                 })
     if len(items) != 150:
-        raise RuntimeError(f"Expected 150 Tahun 4 items, got {len(items)}")
+        raise RuntimeError(f"Expected 150 Tahun 4 items (15 traits × 10 items), got {len(items)}")
     return sorted(items, key=lambda item: item["no"])
 
 

@@ -83,6 +83,15 @@
     ]
   },
   {
+    "key": "daya_tahan",
+    "nama": "Daya Tahan",
+    "warna": "#0EA5E9",
+    "deskripsi": "Cenderung tabah, gigih dan mampu bangkit semula apabila menghadapi cabaran atau kegagalan.",
+    "huraian": [
+      "Cenderung tabah, gigih dan mampu bangkit semula apabila menghadapi cabaran atau kegagalan."
+    ]
+  },
+  {
     "key": "menolong",
     "nama": "Menolong",
     "warna": "#16A34A",
@@ -203,682 +212,682 @@
   {
     "no": 15,
     "teks": "Saya tidak pernah melakukan kesilapan",
-    "domain": 0
+    "domain": 14
   },
   {
     "no": 16,
     "teks": "Saya suka diberi kebebasan dalam membuat keputusan",
-    "domain": 1
+    "domain": 0
   },
   {
     "no": 17,
     "teks": "Saya boleh menghasilkan karya seni",
-    "domain": 2
+    "domain": 1
   },
   {
     "no": 18,
     "teks": "Saya mempertahankan pandangan saya dengan tegas",
-    "domain": 3
+    "domain": 2
   },
   {
     "no": 19,
     "teks": "Saya suka bergaul dengan ramai orang",
-    "domain": 4
+    "domain": 3
   },
   {
     "no": 20,
     "teks": "Saya memastikan kejayaan dicapai",
-    "domain": 5
+    "domain": 4
   },
   {
     "no": 21,
     "teks": "Saya suka mempelajari budaya yang berbeza",
-    "domain": 6
+    "domain": 5
   },
   {
     "no": 22,
     "teks": "Saya lebih gemar memahami sesuatu konsep berbanding menghafal",
-    "domain": 7
+    "domain": 6
   },
   {
     "no": 23,
     "teks": "Saya berupaya mendorong orang lain dalam aktiviti berkumpulan",
-    "domain": 8
+    "domain": 7
   },
   {
     "no": 24,
     "teks": "Saya menyusun tugasan mengikut keutamaan",
-    "domain": 9
+    "domain": 8
   },
   {
     "no": 25,
     "teks": "Saya mempunyai tekad untuk menyelesaikan tugasan",
-    "domain": 10
+    "domain": 9
   },
   {
     "no": 26,
     "teks": "Saya suka membantu orang lain tanpa mengira latar belakang",
-    "domain": 11
+    "domain": 10
   },
   {
     "no": 27,
     "teks": "Saya mempertimbangkan pelbagai perkara sebelum membuat keputusan",
-    "domain": 12
+    "domain": 11
   },
   {
     "no": 28,
     "teks": "Saya tidak mempunyai kelebihan diri",
-    "domain": 13
+    "domain": 12
   },
   {
     "no": 29,
     "teks": "Saya mencari peluang untuk mencapai impian",
-    "domain": 0
+    "domain": 13
   },
   {
     "no": 30,
     "teks": "Saya tidak pernah berasa takut",
-    "domain": 1
+    "domain": 14
   },
   {
     "no": 31,
     "teks": "Saya boleh bekerja bersendirian tanpa dipengaruhi orang lain",
-    "domain": 2
+    "domain": 0
   },
   {
     "no": 32,
     "teks": "Saya mempunyai imaginasi yang tinggi",
-    "domain": 3
+    "domain": 1
   },
   {
     "no": 33,
     "teks": "Saya sentiasa ingin menang dalam menyuarakan pendapat",
-    "domain": 4
+    "domain": 2
   },
   {
     "no": 34,
     "teks": "Saya sentiasa memulakan perbualan dengan orang lain",
-    "domain": 5
+    "domain": 3
   },
   {
     "no": 35,
     "teks": "Saya memastikan prestasi diri pada tahap yang terbaik",
-    "domain": 6
+    "domain": 4
   },
   {
     "no": 36,
     "teks": "Saya menggunakan pendekatan berbeza dalam menyelesaikan masalah",
-    "domain": 7
+    "domain": 5
   },
   {
     "no": 37,
     "teks": "Saya boleh menghubungkait sesuatu perkara yang dipelajari",
-    "domain": 8
+    "domain": 6
   },
   {
     "no": 38,
     "teks": "Saya berani mengambil risiko dalam membuat keputusan",
-    "domain": 9
+    "domain": 7
   },
   {
     "no": 39,
     "teks": "Saya menyusun pakaian mengikut warna",
-    "domain": 10
+    "domain": 8
   },
   {
     "no": 40,
     "teks": "Saya mampu bangkit semula selepas mengalami kegagalan",
-    "domain": 11
+    "domain": 9
   },
   {
     "no": 41,
     "teks": "Saya suka memudahkan urusan orang lain",
-    "domain": 12
+    "domain": 10
   },
   {
     "no": 42,
     "teks": "Saya sering mengkaji bagaimana sesuatu alat berfungsi",
-    "domain": 13
+    "domain": 11
   },
   {
     "no": 43,
     "teks": "Saya meragui kebolehan diri saya",
-    "domain": 0
+    "domain": 12
   },
   {
     "no": 44,
     "teks": "Saya proaktif dalam setiap perkara yang dilakukan",
-    "domain": 1
+    "domain": 13
   },
   {
     "no": 45,
     "teks": "Saya tidak pernah berselisih faham",
-    "domain": 2
+    "domain": 14
   },
   {
     "no": 46,
     "teks": "Saya selesa melakukan tugasan mengikut kawalan sendiri",
-    "domain": 3
+    "domain": 0
   },
   {
     "no": 47,
     "teks": "Saya boleh mengubah suai sesuatu menjadi lebih menarik",
-    "domain": 4
+    "domain": 1
   },
   {
     "no": 48,
     "teks": "Saya berterus terang jika tidak berpuas hati",
-    "domain": 5
+    "domain": 2
   },
   {
     "no": 49,
     "teks": "Saya berinteraksi dengan ramai orang",
-    "domain": 6
+    "domain": 3
   },
   {
     "no": 50,
     "teks": "Saya mengutamakan pencapaian dalam perkara yang dimulakan",
-    "domain": 7
+    "domain": 4
   },
   {
     "no": 51,
     "teks": "Saya menyesuaikan diri dengan perubahan keadaan",
-    "domain": 8
+    "domain": 5
   },
   {
     "no": 52,
     "teks": "Saya suka mendalami maklumat baharu untuk menambah pengetahuan",
-    "domain": 9
+    "domain": 6
   },
   {
     "no": 53,
     "teks": "Saya mengambil berat kebajikan ahli kumpulan",
-    "domain": 10
+    "domain": 7
   },
   {
     "no": 54,
     "teks": "Saya suka menyusun barang mengikut kategori",
-    "domain": 11
+    "domain": 8
   },
   {
     "no": 55,
     "teks": "Saya tetap berusaha walaupun menghadapi kesukaran",
-    "domain": 12
+    "domain": 9
   },
   {
     "no": 56,
     "teks": "Saya bersedia membantu tanpa diminta",
-    "domain": 13
+    "domain": 10
   },
   {
     "no": 57,
     "teks": "Saya membandingkan secara mendalam tentang sesuatu perkara",
-    "domain": 0
+    "domain": 11
   },
   {
     "no": 58,
     "teks": "Saya selalu beranggapan diri akan dikritik",
-    "domain": 1
+    "domain": 12
   },
   {
     "no": 59,
     "teks": "Saya telah menetapkan hala tuju kerjaya",
-    "domain": 2
+    "domain": 13
   },
   {
     "no": 60,
     "teks": "Saya tidak pernah rasa bersalah",
-    "domain": 3
+    "domain": 14
   },
   {
     "no": 61,
     "teks": "Saya berpuas hati apabila dapat membuat keputusan sendiri",
-    "domain": 4
+    "domain": 0
   },
   {
     "no": 62,
     "teks": "Saya menghasilkan sesuatu yang unik",
-    "domain": 5
+    "domain": 1
   },
   {
     "no": 63,
     "teks": "Saya mengutamakan matlamat sendiri berbanding perasaan orang lain",
-    "domain": 6
+    "domain": 2
   },
   {
     "no": 64,
     "teks": "Saya yakin untuk bercakap di hadapan orang ramai",
-    "domain": 7
+    "domain": 3
   },
   {
     "no": 65,
     "teks": "Saya suka mencabar diri",
-    "domain": 8
+    "domain": 4
   },
   {
     "no": 66,
     "teks": "Saya suka mencuba perkara baharu",
-    "domain": 9
+    "domain": 5
   },
   {
     "no": 67,
     "teks": "Saya suka meneroka perkembangan teknologi terkini",
-    "domain": 10
+    "domain": 6
   },
   {
     "no": 68,
     "teks": "Saya memastikan tugasan kumpulan diselesaikan",
-    "domain": 11
+    "domain": 7
   },
   {
     "no": 69,
     "teks": "Saya suka melakukan perkara yang rutin",
-    "domain": 12
+    "domain": 8
   },
   {
     "no": 70,
     "teks": "Saya sentiasa berikhtiar untuk menyelesaikan tugasan",
-    "domain": 13
+    "domain": 9
   },
   {
     "no": 71,
     "teks": "Saya mudah mengasihani orang lain",
-    "domain": 0
+    "domain": 10
   },
   {
     "no": 72,
     "teks": "Saya meneliti sesuatu perkara daripada pelbagai perspektif",
-    "domain": 1
+    "domain": 11
   },
   {
     "no": 73,
     "teks": "Saya saya tidak layak gembira",
-    "domain": 2
+    "domain": 12
   },
   {
     "no": 74,
     "teks": "Saya menetapkan matlamat untuk mencapai cita-cita",
-    "domain": 3
+    "domain": 13
   },
   {
     "no": 75,
     "teks": "Saya sentiasa jujur",
-    "domain": 4
+    "domain": 14
   },
   {
     "no": 76,
     "teks": "Saya menyusun jadual belajar sendiri",
-    "domain": 5
+    "domain": 0
   },
   {
     "no": 77,
     "teks": "Saya suka mempelbagaikan idea dalam sesuatu perkara",
-    "domain": 6
+    "domain": 1
   },
   {
     "no": 78,
     "teks": "Saya cepat bertindak apabila dicabar",
-    "domain": 7
+    "domain": 2
   },
   {
     "no": 79,
     "teks": "Saya seronok terlibat dengan aktiviti berkumpulan",
-    "domain": 8
+    "domain": 3
   },
   {
     "no": 80,
     "teks": "Saya bermotivasi apabila melihat orang lain berjaya",
-    "domain": 9
+    "domain": 4
   },
   {
     "no": 81,
     "teks": "Saya menghormati kepercayaan dan gaya hidup orang lain",
-    "domain": 10
+    "domain": 5
   },
   {
     "no": 82,
     "teks": "Saya menggemari permainan berbentuk penyelesaian masalah",
-    "domain": 11
+    "domain": 6
   },
   {
     "no": 83,
     "teks": "Saya boleh membawa perubahan positif dalam kumpulan",
-    "domain": 12
+    "domain": 7
   },
   {
     "no": 84,
     "teks": "Saya suka kepada cara kerja yang jelas",
-    "domain": 13
+    "domain": 8
   },
   {
     "no": 85,
     "teks": "Saya boleh mengawal emosi apabila menghadapi kesukaran",
-    "domain": 0
+    "domain": 9
   },
   {
     "no": 86,
     "teks": "Saya prihatin terhadap keperluan orang lain",
-    "domain": 1
+    "domain": 10
   },
   {
     "no": 87,
     "teks": "Saya memastikan sesuatu maklumat adalah sahih",
-    "domain": 2
+    "domain": 11
   },
   {
     "no": 88,
     "teks": "Saya mudah berasa rendah diri",
-    "domain": 3
+    "domain": 12
   },
   {
     "no": 89,
     "teks": "Saya bercita-cita mencipta sesuatu yang boleh membawa perubahan",
-    "domain": 4
+    "domain": 13
   },
   {
     "no": 90,
     "teks": "Saya sentiasa mesra dengan semua orang",
-    "domain": 5
+    "domain": 14
   },
   {
     "no": 91,
     "teks": "Saya menentukan sendiri aktiviti masa lapang",
-    "domain": 6
+    "domain": 0
   },
   {
     "no": 92,
     "teks": "Saya menyelesaikan masalah dengan pelbagai cara",
-    "domain": 7
+    "domain": 1
   },
   {
     "no": 93,
     "teks": "Saya yakin idea saya adalah yang terbaik",
-    "domain": 8
+    "domain": 2
   },
   {
     "no": 94,
     "teks": "Saya lebih bersemangat apabila berinteraksi dengan orang lain",
-    "domain": 9
+    "domain": 3
   },
   {
     "no": 95,
     "teks": "Saya sentiasa berusaha untuk menjadi yang terbaik di dalam kelas",
-    "domain": 10
+    "domain": 4
   },
   {
     "no": 96,
     "teks": "Saya suka pelbagai genre filem",
-    "domain": 11
+    "domain": 5
   },
   {
     "no": 97,
     "teks": "Saya akan bertanya soalan untuk mendapatkan penjelasan",
-    "domain": 12
+    "domain": 6
   },
   {
     "no": 98,
     "teks": "Saya memastikan pendapat setiap ahli kumpulan didengari",
-    "domain": 13
+    "domain": 7
   },
   {
     "no": 99,
     "teks": "Saya mengurus waktu ulang kaji mengikut jadual",
-    "domain": 0
+    "domain": 8
   },
   {
     "no": 100,
     "teks": "Saya tidak membiarkan kegagalan menghalang impian saya",
-    "domain": 1
+    "domain": 9
   },
   {
     "no": 101,
     "teks": "Saya sentiasa mencari jalan untuk menawarkan bantuan",
-    "domain": 2
+    "domain": 10
   },
   {
     "no": 102,
     "teks": "Saya menilai idea berdasarkan fakta",
-    "domain": 3
+    "domain": 11
   },
   {
     "no": 103,
     "teks": "Saya selalu menyalahkan diri sendiri",
-    "domain": 4
+    "domain": 12
   },
   {
     "no": 104,
     "teks": "Saya meletakkan matlamat untuk kerjaya masa hadapan",
-    "domain": 5
+    "domain": 13
   },
   {
     "no": 105,
     "teks": "Saya tidak pernah mungkir janji",
-    "domain": 6
+    "domain": 14
   },
   {
     "no": 106,
     "teks": "Saya bebas memilih bidang kerjaya",
-    "domain": 7
+    "domain": 0
   },
   {
     "no": 107,
     "teks": "Saya suka menggabungkan pelbagai idea",
-    "domain": 8
+    "domain": 1
   },
   {
     "no": 108,
     "teks": "Saya menyuarakan pendapat tanpa menghiraukan orang lain",
-    "domain": 9
+    "domain": 2
   },
   {
     "no": 109,
     "teks": "Saya suka melibatkan diri dalam aktiviti sosial",
-    "domain": 10
+    "domain": 3
   },
   {
     "no": 110,
     "teks": "Saya akan memastikan kejayaan dicapai dalam setiap pertandingan",
-    "domain": 11
+    "domain": 4
   },
   {
     "no": 111,
     "teks": "Saya berminat mencuba pelbagai kaedah pembelajaran",
-    "domain": 12
+    "domain": 5
   },
   {
     "no": 112,
     "teks": "Saya suka menyertai kuiz",
-    "domain": 13
+    "domain": 6
   },
   {
     "no": 113,
     "teks": "Saya yakin membuat keputusan dalam kumpulan",
-    "domain": 0
+    "domain": 7
   },
   {
     "no": 114,
     "teks": "Saya mengutamakan kekemasan diri",
-    "domain": 1
+    "domain": 8
   },
   {
     "no": 115,
     "teks": "Saya sentiasa mengekalkan motivasi diri",
-    "domain": 2
+    "domain": 9
   },
   {
     "no": 116,
     "teks": "Saya suka membantu guru",
-    "domain": 3
+    "domain": 10
   },
   {
     "no": 117,
     "teks": "Saya suka menganalisis maklumat",
-    "domain": 4
+    "domain": 11
   },
   {
     "no": 118,
     "teks": "Saya berasa tidak mampu untuk berjaya",
-    "domain": 5
+    "domain": 12
   },
   {
     "no": 119,
     "teks": "Saya menetapkan impian untuk masa hadapan",
-    "domain": 6
+    "domain": 13
   },
   {
     "no": 120,
     "teks": "Saya sentiasa gembira",
-    "domain": 7
+    "domain": 14
   },
   {
     "no": 121,
     "teks": "Saya akan menentukan tindakan saya",
-    "domain": 8
+    "domain": 0
   },
   {
     "no": 122,
     "teks": "Saya tidak suka kerja yang berstruktur",
-    "domain": 9
+    "domain": 1
   },
   {
     "no": 123,
     "teks": "Saya tidak berdiam diri apabila pendapat ditolak",
-    "domain": 10
+    "domain": 2
   },
   {
     "no": 124,
     "teks": "Saya yakin apabila berada di khalayak ramai",
-    "domain": 11
+    "domain": 3
   },
   {
     "no": 125,
     "teks": "Saya suka bersaing",
-    "domain": 12
+    "domain": 4
   },
   {
     "no": 126,
     "teks": "Saya boleh menyesuaikan diri dalam pelbagai keadaan",
-    "domain": 13
+    "domain": 5
   },
   {
     "no": 127,
     "teks": "Saya mengaplikasi pengetahuan dalam kehidupan seharian",
-    "domain": 0
+    "domain": 6
   },
   {
     "no": 128,
     "teks": "Saya berkeyakinan untuk memimpin",
-    "domain": 1
+    "domain": 7
   },
   {
     "no": 129,
     "teks": "Saya sentiasa menyiapkan tugasan mengikut perancangan",
-    "domain": 2
+    "domain": 8
   },
   {
     "no": 130,
     "teks": "Saya tidak mudah terpengaruh dengan orang lain",
-    "domain": 3
+    "domain": 9
   },
   {
     "no": 131,
     "teks": "Saya mengambil berat terhadap orang lain",
-    "domain": 4
+    "domain": 10
   },
   {
     "no": 132,
     "teks": "Saya berfikir sebelum bertindak",
-    "domain": 5
+    "domain": 11
   },
   {
     "no": 133,
     "teks": "Saya malu dengan diri sendiri",
-    "domain": 6
+    "domain": 12
   },
   {
     "no": 134,
     "teks": "Saya mempunyai inspirasi untuk berjaya",
-    "domain": 7
+    "domain": 13
   },
   {
     "no": 135,
     "teks": "Saya sentiasa menepati masa",
-    "domain": 8
+    "domain": 14
   },
   {
     "no": 136,
     "teks": "Saya suka membuat perancangan sendiri",
-    "domain": 9
+    "domain": 0
   },
   {
     "no": 137,
     "teks": "Saya suka aktiviti inovasi",
-    "domain": 10
+    "domain": 1
   },
   {
     "no": 138,
     "teks": "Saya berani mengkritik pendapat orang lain",
-    "domain": 11
+    "domain": 2
   },
   {
     "no": 139,
     "teks": "Saya suka meluangkan masa lapang bersama rakan-rakan",
-    "domain": 12
+    "domain": 3
   },
   {
     "no": 140,
     "teks": "Saya mengekalkan motivasi untuk mencapai matlamat",
-    "domain": 13
+    "domain": 4
   },
   {
     "no": 141,
     "teks": "Saya mempelbagaikan gaya penampilan",
-    "domain": 0
+    "domain": 5
   },
   {
     "no": 142,
     "teks": "Saya suka membincangkan perkara ilmiah",
-    "domain": 1
+    "domain": 6
   },
   {
     "no": 143,
     "teks": "Saya suka menetapkan peraturan dalam kumpulan",
-    "domain": 2
+    "domain": 7
   },
   {
     "no": 144,
     "teks": "Saya memastikan barangan dalam keadaan tersusun",
-    "domain": 3
+    "domain": 8
   },
   {
     "no": 145,
     "teks": "Saya terus berjuang walaupun mengalami kegagalan",
-    "domain": 4
+    "domain": 9
   },
   {
     "no": 146,
     "teks": "Saya simpati terhadap kesusahan orang lain",
-    "domain": 5
+    "domain": 10
   },
   {
     "no": 147,
     "teks": "Saya cuba memahami sebab disebalik sesuatu peristiwa",
-    "domain": 6
+    "domain": 11
   },
   {
     "no": 148,
     "teks": "Saya sentiasa berasa diri teraniaya",
-    "domain": 7
+    "domain": 12
   },
   {
     "no": 149,
     "teks": "Saya menetapkan strategi untuk mencapai matlamat",
-    "domain": 8
+    "domain": 13
   },
   {
     "no": 150,
     "teks": "Saya sentiasa sihat",
-    "domain": 9
+    "domain": 14
   }
 ];
 
