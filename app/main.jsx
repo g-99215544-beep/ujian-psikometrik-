@@ -111,7 +111,9 @@ function App() {
   const handlePrint = () => {
     const prev = document.title;
     const nama = murid ? murid.nama : '';
-    document.title = nama ? `Analisis Aptitud ${nama}` : 'Analisis Aptitud';
+    const tahun = instrument ? instrument.year : '';
+    const parts = ['Analisis Aptitud', nama, tahun ? `Tahun ${tahun}` : ''].filter(Boolean);
+    document.title = parts.join(' ');
     window.print();
     document.title = prev;
   };
