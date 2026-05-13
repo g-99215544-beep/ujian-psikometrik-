@@ -49,7 +49,7 @@ Komponen baru dalam `admin.jsx`. Menerima:
 Tanggungjawab:
 1. Kira skor setiap murid menggunakan `ScoreInstrument` (sudah ada)
 2. Render jadual dengan kolum sesuai ikut `instrument.kind` (`traits` / `intelligence` / `aptitude`) dan `instrument.year`
-3. Butang Cetak setiap baris menggunakan logik print sedia ada
+3. Butang Cetak setiap baris: set `document.title` kepada `Analisis Aptitud <nama> Tahun <tahun>`, render `AdminAnswerSheet` + `AdminAnalysis` dalam hidden `printingRecord` state, panggil `window.print()`, kemudian reset title dan state — sama seperti butang Cetak dalam paparan senarai sedia ada
 
 ### Perubahan pada `AdminScreen`
 - Tambah state: `const [viewMode, setViewMode] = React.useState('table')`
@@ -72,12 +72,12 @@ classRecords (array rekod selesai)
 ## CSS
 
 - Wrapper: `overflow-x: auto` pada div jadual
-- Sticky columns: `position: sticky; left: <offset>px; z-index: 2`
-  - Bil: `left: 0`
-  - Nama: `left: 32px`
-  - ID: `left: 152px` (mengikut lebar nama)
-- Gaya skor: badge hijau `#dcfce7` untuk domain A, badge biru `#dbeafe` untuk Bahagian B
-- Tab toggle: border-radius 6px, tab aktif background `#2563eb`
+- Sticky columns: `position: sticky; z-index: 2` dengan lebar tetap:
+  - Bil: `width: 36px; left: 0`
+  - Nama: `min-width: 140px; left: 36px`
+  - ID: `min-width: 130px; left: 176px` (36 + 140); tambah `border-right: 2px solid #cbd5e1` sebagai pemisah visual
+- Gaya skor: badge hijau `background: #dcfce7; color: #166534` untuk domain A, badge biru `background: #dbeafe; color: #1e40af` untuk Bahagian B
+- Tab toggle: border-radius 6px, tab aktif `background: #2563eb; color: white`
 
 ## Fail yang Diubah
 
