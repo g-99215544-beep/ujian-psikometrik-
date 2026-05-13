@@ -589,7 +589,7 @@ function ClassTable({ records, instrument, onPrint }) {
                   return (
                     <td key={d.key || d.nama}>
                       {s
-                        ? <span className="ct-score-a">{s.ya}/{s.total}</span>
+                        ? <span className="ct-score-a">{s.pct}%</span>
                         : <span className="ct-pending">—</span>}
                     </td>
                   );
@@ -598,8 +598,8 @@ function ClassTable({ records, instrument, onPrint }) {
                 {hasBahagianB && (
                   sc && sc.bReasoning ? (
                     <>
-                      <td><span className="ct-score-b">{sc.bReasoning.right}/{sc.bReasoning.total}</span></td>
-                      <td><span className="ct-score-b">{sc.bProblemSolving.right}/{sc.bProblemSolving.total}</span></td>
+                      <td><span className="ct-score-b">{sc.bReasoning.pct}%</span></td>
+                      <td><span className="ct-score-b">{sc.bProblemSolving.pct}%</span></td>
                     </>
                   ) : (
                     <>
