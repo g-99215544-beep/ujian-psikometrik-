@@ -9,6 +9,7 @@ window.AdminScreen = function ({ onBack }) {
   const [expandedIc, setExpandedIc] = React.useState('');
   const [printingAll, setPrintingAll] = React.useState(false);
   const [printingRecord, setPrintingRecord] = React.useState(null);
+  const [viewMode, setViewMode] = React.useState('table');
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
   const prevTitleRef = React.useRef('');
@@ -79,6 +80,12 @@ window.AdminScreen = function ({ onBack }) {
   }, [classes]);
 
   const classRecords = completedByKelas[selectedKelas] || [];
+  const classInstrument = React.useMemo(() => {
+    if (!classRecords.length) return window.INSTRUMENTS && window.INSTRUMENTS[6];
+    return window.GetInstrumentForMurid
+      ? window.GetInstrumentForMurid(classRecords[0].murid)
+      : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+  }, [classRecords]);
   const expandedRecord = classRecords.find(r => r.ic === expandedIc);
   const expandedInstrument = expandedRecord && window.GetInstrumentForMurid
     ? window.GetInstrumentForMurid(expandedRecord.murid)
@@ -249,102 +256,122 @@ window.AdminScreen = function ({ onBack }) {
             {classRecords.length === 0
               ? <p style={{ color: 'var(--muted)', marginTop: 12 }}>Tiada murid yang telah menghantar borang.</p>
               : (
-                <div className="admin-student-list">
-                  {classRecords.map(record => {
-                    const inst = window.GetInstrumentForMurid
-                      ? window.GetInstrumentForMurid(record.murid)
-                      : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
-                    const sc = window.ScoreInstrument
-                      ? window.ScoreInstrument(record.jawapan || {}, inst)
-                      : null;
-                    const isExpanded = expandedIc === record.ic;
-                    return (
-                      <div key={record.ic} className={`admin-student-row ${isExpanded ? 'expanded' : ''}`}>
-                        <div className="admin-student-row-head"
-                          onClick={() => setExpandedIc(isExpanded ? '' : record.ic)}>
-                          <span className="admin-student-name">{record.murid.nama}</span>
-                          {sc && (
-                            <span className="admin-student-top">
-                              {sc.top3.map(s => s.nama).join(' · ')}
-                            </span>
-                          )}
-                          <span className="admin-student-inst">{inst.shortTitle}</span>
-                          <button className="btn-icon btn-icon-danger" title="Padam rekod"
-                            onClick={e => {
-                              e.stopPropagation();
-                              if (!window.confirm(`Padam rekod ${record.murid.nama}? Tindakan ini tidak boleh dibatalkan.`)) return;
-                              window.StudentDirectory.deleteBorangJawapan(record.ic)
-                                .then(() => loadRecords())
-                                .catch(err => alert(err.message));
-                            }}>
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="3,6 5,6 21,6"/>
-                              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
-                              <path d="M10 11v6M14 11v6"/>
-                              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
-                            </svg>
-                          </button>
-                          <span className="expand-caret">{isExpanded ? '▲' : '▼'}</span>
-                        </div>
+                <>
+                  <div className="view-tabs">
+                    <button
+                      className={`view-tab ${viewMode === 'table' ? 'active' : ''}`}
+                      onClick={() => setViewMode('table')}>
+                      ⊞ Jadual
+                    </button>
+                    <button
+                      className={`view-tab ${viewMode === 'list' ? 'active' : ''}`}
+                      onClick={() => setViewMode('list')}>
+                      ☰ Senarai
+                    </button>
+                  </div>
 
-                        {isExpanded && sc && (
-                          <div className="admin-student-detail">
-                            <div className="admin-grid">
-                              <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
-                                <h2>{record.murid.nama}</h2>
-                                <p className="res-card-sub">{record.murid.kelas} - {record.murid.sekolah}</p>
-                                <div className="admin-stats">
-                                  <div>
-                                    <div className="meta-label">Dijawab</div>
-                                    <div className="meta-val">{sc.answeredCount}/{inst.sectionA.length + inst.sectionB.length}</div>
-                                  </div>
-                                  <div>
-                                    <div className="meta-label">Instrumen</div>
-                                    <div className="meta-val">{inst.shortTitle}</div>
-                                  </div>
-                                  <div>
-                                    <div className="meta-label">Dihantar</div>
-                                    <div className="meta-val">{record.updatedAtIso ? new Date(record.updatedAtIso).toLocaleString('ms-MY') : '-'}</div>
-                                  </div>
-                                </div>
+                  {viewMode === 'table'
+                    ? <ClassTable records={classRecords} instrument={classInstrument} onPrint={handleTablePrint} />
+                    : (
+                      <div className="admin-student-list">
+                        {classRecords.map(record => {
+                          const inst = window.GetInstrumentForMurid
+                            ? window.GetInstrumentForMurid(record.murid)
+                            : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+                          const sc = window.ScoreInstrument
+                            ? window.ScoreInstrument(record.jawapan || {}, inst)
+                            : null;
+                          const isExpanded = expandedIc === record.ic;
+                          return (
+                            <div key={record.ic} className={`admin-student-row ${isExpanded ? 'expanded' : ''}`}>
+                              <div className="admin-student-row-head"
+                                onClick={() => setExpandedIc(isExpanded ? '' : record.ic)}>
+                                <span className="admin-student-name">{record.murid.nama}</span>
+                                {sc && (
+                                  <span className="admin-student-top">
+                                    {sc.top3.map(s => s.nama).join(' · ')}
+                                  </span>
+                                )}
+                                <span className="admin-student-inst">{inst.shortTitle}</span>
+                                <button className="btn-icon btn-icon-danger" title="Padam rekod"
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    if (!window.confirm(`Padam rekod ${record.murid.nama}? Tindakan ini tidak boleh dibatalkan.`)) return;
+                                    window.StudentDirectory.deleteBorangJawapan(record.ic)
+                                      .then(() => loadRecords())
+                                      .catch(err => alert(err.message));
+                                  }}>
+                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                                    <path d="M10 11v6M14 11v6"/>
+                                    <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                                  </svg>
+                                </button>
+                                <span className="expand-caret">{isExpanded ? '▲' : '▼'}</span>
                               </div>
-                              <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
-                                <h2>{inst.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan'}</h2>
-                                <div className="admin-mini-list">
-                                  {sc.top3.map((s, i) => (
-                                    <div key={s.idx} className="admin-mini-row">
-                                      <span>{i + 1}. {s.nama}</span>
-                                      <strong>{s.ya}/{s.total}</strong>
+
+                              {isExpanded && sc && (
+                                <div className="admin-student-detail">
+                                  <div className="admin-grid">
+                                    <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
+                                      <h2>{record.murid.nama}</h2>
+                                      <p className="res-card-sub">{record.murid.kelas} - {record.murid.sekolah}</p>
+                                      <div className="admin-stats">
+                                        <div>
+                                          <div className="meta-label">Dijawab</div>
+                                          <div className="meta-val">{sc.answeredCount}/{inst.sectionA.length + inst.sectionB.length}</div>
+                                        </div>
+                                        <div>
+                                          <div className="meta-label">Instrumen</div>
+                                          <div className="meta-val">{inst.shortTitle}</div>
+                                        </div>
+                                        <div>
+                                          <div className="meta-label">Dihantar</div>
+                                          <div className="meta-val">{record.updatedAtIso ? new Date(record.updatedAtIso).toLocaleString('ms-MY') : '-'}</div>
+                                        </div>
+                                      </div>
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
+                                    <div className="admin-card" style={{ border: 'none', padding: '12px 0', boxShadow: 'none' }}>
+                                      <h2>{inst.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan'}</h2>
+                                      <div className="admin-mini-list">
+                                        {sc.top3.map((s, i) => (
+                                          <div key={s.idx} className="admin-mini-row">
+                                            <span>{i + 1}. {s.nama}</span>
+                                            <strong>{s.ya}/{s.total}</strong>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
 
-                            <AdminAnalysis analysis={sc.analysis} />
+                                  <AdminAnalysis analysis={sc.analysis} />
 
-                            <div style={{ marginTop: 16 }}>
-                              <div className="sheet-toolbar">
-                                <div>
-                                  <h2>Borang Jawapan</h2>
-                                  <p className="res-card-sub">Format cetakan seperti borang jawapan rasmi.</p>
+                                  <div style={{ marginTop: 16 }}>
+                                    <div className="sheet-toolbar">
+                                      <div>
+                                        <h2>Borang Jawapan</h2>
+                                        <p className="res-card-sub">Format cetakan seperti borang jawapan rasmi.</p>
+                                      </div>
+                                      <button className="btn" onClick={() => {
+                                        const prev = document.title;
+                                        document.title = `Analisis Aptitud ${record.murid.nama} Tahun ${inst.year}`;
+                                        window.print();
+                                        document.title = prev;
+                                      }}>Cetak</button>
+                                    </div>
+                                    <AdminAnswerSheet record={record} score={sc} instrument={inst} />
+                                  </div>
                                 </div>
-                                <button className="btn" onClick={() => {
-                                  const prev = document.title;
-                                  document.title = `Analisis Aptitud ${record.murid.nama} Tahun ${inst.year}`;
-                                  window.print();
-                                  document.title = prev;
-                                }}>Cetak</button>
-                              </div>
-                              <AdminAnswerSheet record={record} score={sc} instrument={inst} />
+                              )}
                             </div>
-                          </div>
-                        )}
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
+                    )
+                  }
+                </>
               )
             }
           </div>
