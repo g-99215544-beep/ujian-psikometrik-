@@ -466,3 +466,97 @@ function AdminAnswerSheet({ record, score, instrument }) {
     </div>
   );
 }
+
+function ClassTable({ records, instrument, onPrint }) {
+  if (!records.length || !instrument) return null;
+
+  const domains = instrument.domains || [];
+  const hasBahagianB = (instrument.sectionB || []).length > 0;
+
+  const rows = records.map(record => ({
+    record,
+    sc: window.ScoreInstrument
+      ? window.ScoreInstrument(record.jawapan || {}, instrument)
+      : null
+  }));
+
+  const thead = hasBahagianB ? (
+    React.createElement(React.Fragment, null,
+      React.createElement('tr', null,
+        React.createElement('th', { className: 'ct-sticky ct-bil', rowSpan: 2 }, 'Bil.'),
+        React.createElement('th', { className: 'ct-sticky ct-nama', rowSpan: 2 }, 'Nama'),
+        React.createElement('th', { className: 'ct-sticky ct-id', rowSpan: 2 }, 'ID Pengenalan'),
+        React.createElement('th', { colSpan: domains.length, className: 'ct-th-a' }, 'BAHAGIAN A — Kecerdasan Pelbagai'),
+        React.createElement('th', { colSpan: 2, className: 'ct-th-b' }, 'BAHAGIAN B'),
+        React.createElement('th', { rowSpan: 2 }, 'Status'),
+        React.createElement('th', { rowSpan: 2 }, 'Cetak')
+      ),
+      React.createElement('tr', null,
+        ...domains.map(d => React.createElement('th', { key: d.key || d.nama }, d.nama)),
+        React.createElement('th', null, 'Menaakul', React.createElement('br'), React.createElement('small', { style: { fontWeight: 400 } }, '(1–15)')),
+        React.createElement('th', null, 'Penyelesaian', React.createElement('br'), React.createElement('small', { style: { fontWeight: 400 } }, '(16–30)'))
+      )
+    )
+  ) : (
+    React.createElement('tr', null,
+      React.createElement('th', { className: 'ct-sticky ct-bil' }, 'Bil.'),
+      React.createElement('th', { className: 'ct-sticky ct-nama' }, 'Nama'),
+      React.createElement('th', { className: 'ct-sticky ct-id' }, 'ID Pengenalan'),
+      ...domains.map(d => React.createElement('th', { key: d.key || d.nama }, d.nama)),
+      React.createElement('th', null, 'Status'),
+      React.createElement('th', null, 'Cetak')
+    )
+  );
+
+  return (
+    <div className="ct-wrap">
+      <table className="ct">
+        <thead>{thead}</thead>
+        <tbody>
+          {rows.map(({ record, sc }, idx) => {
+            const ic = record.murid.ic || record.ic || '';
+            return (
+              <tr key={ic || idx}>
+                <td className="ct-sticky ct-bil">{idx + 1}</td>
+                <td className="ct-sticky ct-nama">{record.murid.nama}</td>
+                <td className="ct-sticky ct-id">{ic}</td>
+
+                {domains.map((d, dIdx) => {
+                  const s = sc && sc.aScores.find(a => a.idx === dIdx);
+                  return (
+                    <td key={d.key || d.nama}>
+                      {s
+                        ? <span className="ct-score-a">{s.ya}/{s.total}</span>
+                        : <span className="ct-pending">—</span>}
+                    </td>
+                  );
+                })}
+
+                {hasBahagianB && (
+                  sc && sc.bReasoning ? (
+                    <>
+                      <td><span className="ct-score-b">{sc.bReasoning.right}/{sc.bReasoning.total}</span></td>
+                      <td><span className="ct-score-b">{sc.bProblemSolving.right}/{sc.bProblemSolving.total}</span></td>
+                    </>
+                  ) : (
+                    <>
+                      <td><span className="ct-pending">—</span></td>
+                      <td><span className="ct-pending">—</span></td>
+                    </>
+                  )
+                )}
+
+                <td><span className="ct-done">Selesai</span></td>
+                <td>
+                  <button className="btn ct-print-btn" onClick={() => onPrint(record)}>
+                    Cetak
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
