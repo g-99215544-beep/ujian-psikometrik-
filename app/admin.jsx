@@ -8,6 +8,7 @@ window.AdminScreen = function ({ onBack }) {
   const [selectedKelas, setSelectedKelas] = React.useState('');
   const [expandedIc, setExpandedIc] = React.useState('');
   const [printingAll, setPrintingAll] = React.useState(false);
+  const [printingRecord, setPrintingRecord] = React.useState(null);
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
   const prevTitleRef = React.useRef('');
@@ -103,6 +104,29 @@ window.AdminScreen = function ({ onBack }) {
     setPrintingAll(true);
   };
 
+  React.useEffect(() => {
+    if (!printingRecord) return;
+    const t = window.setTimeout(() => {
+      window.print();
+      document.title = prevTitleRef.current;
+      setPrintingRecord(null);
+    }, 250);
+    return () => window.clearTimeout(t);
+  }, [printingRecord]);
+
+  const handleTablePrint = React.useCallback((record) => {
+    const inst = window.GetInstrumentForMurid
+      ? window.GetInstrumentForMurid(record.murid)
+      : (window.INSTRUMENTS && window.INSTRUMENTS[6]);
+    const sc = window.ScoreInstrument
+      ? window.ScoreInstrument(record.jawapan || {}, inst)
+      : null;
+    if (!sc) return;
+    prevTitleRef.current = document.title;
+    document.title = `Analisis Aptitud ${record.murid.nama} Tahun ${inst.year}`;
+    setPrintingRecord({ record, sc, inst });
+  }, []);
+
   if (!authed) {
     return (
       <div className="admin-page">
@@ -147,6 +171,18 @@ window.AdminScreen = function ({ onBack }) {
             </div>
           );
         })}
+      </div>
+    );
+  }
+
+  if (printingRecord) {
+    const { record, sc, inst } = printingRecord;
+    return (
+      <div>
+        <AdminAnswerSheet record={record} score={sc} instrument={inst} />
+        <div style={{ marginTop: 24 }}>
+          <AdminAnalysis analysis={sc.analysis} />
+        </div>
       </div>
     );
   }
