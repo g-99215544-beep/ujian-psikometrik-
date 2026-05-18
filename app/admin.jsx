@@ -598,8 +598,8 @@ function ClassTable({ records, instrument, onPrint }) {
                 {hasBahagianB && (
                   sc && sc.bReasoning ? (
                     <>
-                      <td><span className="ct-score-b">{sc.bReasoning.pct}%</span></td>
-                      <td><span className="ct-score-b">{sc.bProblemSolving.pct}%</span></td>
+                      <td><span className="ct-score-b">{sc.bReasoning.right}</span></td>
+                      <td><span className="ct-score-b">{sc.bProblemSolving.right}</span></td>
                     </>
                   ) : (
                     <>
