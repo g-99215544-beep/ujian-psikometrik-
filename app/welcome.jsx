@@ -5,6 +5,7 @@ window.WelcomeScreen = function ({ onStart }) {
   const [murid, setMurid] = React.useState(null);
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
+  const [existingRecord, setExistingRecord] = React.useState(null);
 
   const lookup = async (e) => {
     e.preventDefault();
@@ -38,6 +39,10 @@ window.WelcomeScreen = function ({ onStart }) {
       }
       setIc(cleanIc);
       setMurid(found);
+      const record = directory.findBorangJawapanByIc
+        ? await directory.findBorangJawapanByIc(cleanIc)
+        : null;
+      setExistingRecord(record);
       setStatus('found');
     } catch (err) {
       setStatus('error');
@@ -46,7 +51,7 @@ window.WelcomeScreen = function ({ onStart }) {
   };
 
   const confirmIdentity = () => {
-    if (murid) onStart(murid);
+    if (murid) onStart(murid, existingRecord);
   };
   const selectedInstrument = murid && window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : null;
 
@@ -86,6 +91,7 @@ window.WelcomeScreen = function ({ onStart }) {
                     const value = e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
                     setIc(value);
                     setMurid(null);
+                    setExistingRecord(null);
                     setStatus('idle');
                     setMessage('');
                   }}
@@ -119,6 +125,11 @@ window.WelcomeScreen = function ({ onStart }) {
                   <div className="meta-val">{murid.sekolah}</div>
                 </div>
               </div>
+              {existingRecord && (
+                <div className="identity-completed">
+                  ✓ Anda telah selesai menjawab ujian ini.
+                </div>
+              )}
               {selectedInstrument && (
                 <div>
                   <div className="meta-label">Instrumen</div>
@@ -130,10 +141,12 @@ window.WelcomeScreen = function ({ onStart }) {
 
           <div className="welcome-actions">
             <button type="button" className="btn btn-primary" disabled={!murid} onClick={confirmIdentity}>
-              Mula Pentaksiran →
+              {existingRecord ? 'Lihat Keputusan →' : 'Mula Pentaksiran →'}
             </button>
             <span className="brand-sub" style={{ marginLeft: 8 }}>
-              Sahkan nama dan kelas sebelum mula.
+              {existingRecord
+                ? 'Anda akan dibawa ke laporan keputusan.'
+                : 'Sahkan nama dan kelas sebelum mula.'}
             </span>
           </div>
         </form>
