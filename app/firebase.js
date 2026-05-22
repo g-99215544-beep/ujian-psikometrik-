@@ -69,6 +69,19 @@
     return payload;
   }
 
+  async function findBorangJawapanByIc(input) {
+    const ic = normalizeIc(input);
+    if (!ic || ic.length < 6) return null;
+    if (!hasFirebase()) return null;
+    try {
+      const snap = await firebase.database().ref(`${ROOT}/borangJawapanByIc/${ic}`).get();
+      return snap.exists() ? snap.val() : null;
+    } catch (err) {
+      console.warn('findBorangJawapanByIc failed:', err);
+      return null;
+    }
+  }
+
   async function listBorangJawapan() {
     if (!hasFirebase()) {
       throw new Error('Firebase belum dimuatkan. Sila semak sambungan internet.');
@@ -112,5 +125,5 @@
     return Object.entries(snap.val()).map(([ic, value]) => ({ ic, ...value }));
   }
 
-  window.StudentDirectory = { normalizeIc, findMuridByIc, saveBorangJawapan, listBorangJawapan, deleteBorangJawapan, listAllMurid };
+  window.StudentDirectory = { normalizeIc, findMuridByIc, findBorangJawapanByIc, saveBorangJawapan, listBorangJawapan, deleteBorangJawapan, listAllMurid };
 })();
