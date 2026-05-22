@@ -709,21 +709,8 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 }
 .trait-modal-hero {
   background: var(--surface-2, #f5f6fa);
-  position: relative;
 }
 .trait-modal-hero img { display: block; width: 100%; height: auto; }
-.trait-modal-hero .trait-modal-logo-overlay {
-  position: absolute;
-  left: 4.5%;
-  bottom: 1.8%;
-  width: 13%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
-  background: #fff;
-  padding: 2px;
-  border-radius: 4px;
-}
 
 .trait-modal-section { padding: 14px 28px; }
 .trait-modal-section h3 {

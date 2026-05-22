@@ -28,12 +28,6 @@ window.TraitModal = function ({ domain, detail, onClose }) {
               alt={`Poster ${domain.nama}`}
               onError={() => setImgFailed(true)}
             />
-            <img
-              className="trait-modal-logo-overlay"
-              src="assets/logo-sksa.jpg"
-              alt="Logo SK Sri Aman"
-              aria-hidden="true"
-            />
           </div>
         )}
 
