@@ -100,8 +100,18 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
               <div className="top-domains">
                 {top3.map((s, i) => {
                   const def = domains[s.idx];
+                  const detail = supportsDetail ? details[def.key] : null;
+                  const clickable = !!detail;
+                  const open = () => setSelectedDomain(def);
                   return (
-                    <div key={s.idx} className="top-domain">
+                    <div
+                      key={s.idx}
+                      className={`top-domain${clickable ? ' clickable' : ''}`}
+                      role={clickable ? 'button' : undefined}
+                      tabIndex={clickable ? 0 : undefined}
+                      onClick={clickable ? open : undefined}
+                      onKeyDown={clickable ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } } : undefined}
+                    >
                       <div className="td-num">{i+1}</div>
                       <div className="td-body">
                         <h4>

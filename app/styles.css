@@ -661,6 +661,17 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 .bar-row.clickable:hover { background: var(--surface-2); }
 .bar-row.clickable:focus-visible { outline: 2px solid var(--accent, #5B8DEF); outline-offset: 2px; }
 
+.top-domain.clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.top-domain.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,0.08));
+  border-color: var(--ink-2, #555);
+}
+.top-domain.clickable:focus-visible { outline: 2px solid var(--accent, #5B8DEF); outline-offset: 2px; }
+
 /* === Trait detail modal === */
 .trait-modal-overlay {
   position: fixed; inset: 0; z-index: 1000;
