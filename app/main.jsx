@@ -22,6 +22,10 @@ function loadMurid() {
   }
 }
 
+function loadViewOnly() {
+  return localStorage.getItem('iat6.viewOnly') === '1';
+}
+
 function App() {
   // Routes: 'welcome' | 'arahan' | 'ujian' | 'keputusan' | 'admin'
   const [route, setRoute] = useState(() => {
@@ -30,6 +34,7 @@ function App() {
   });
   const [murid, setMurid] = useState(loadMurid);
   const [jawapan, setJawapan] = useState(loadJawapan);
+  const [viewOnly, setViewOnly] = useState(loadViewOnly);
 
   const [tweaks, setTweaks] = window.useTweaks ? window.useTweaks(TWEAK_DEFAULTS) : useTweaksLocal(TWEAK_DEFAULTS);
   const setTweak = (k, v) => setTweaks(prev => ({ ...prev, [k]: v }));
@@ -77,12 +82,27 @@ function App() {
     return () => clearInterval(id);
   }, [route, startedAt, tweaks.timerOn, duration]);
 
-  const handleStart = (data) => {
-    ['iat6.jawapan','iat6.idx','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
-    setMurid(data);
-    setJawapan({});
+  const handleStart = (data, existingRecord) => {
+    ['iat6.jawapan','iat6.idx','iat6.startedAt','iat6.viewOnly'].forEach(k => localStorage.removeItem(k));
     setStartedAt(null);
     setTimeLeft(null);
+
+    if (existingRecord) {
+      const savedMurid = existingRecord.murid || data;
+      const savedJawapan = existingRecord.jawapan || {};
+      setMurid(savedMurid);
+      setJawapan(savedJawapan);
+      setViewOnly(true);
+      localStorage.setItem('iat6.murid', JSON.stringify(savedMurid));
+      localStorage.setItem('iat6.jawapan', JSON.stringify(savedJawapan));
+      localStorage.setItem('iat6.viewOnly', '1');
+      setRoute('keputusan');
+      return;
+    }
+
+    setMurid(data);
+    setJawapan({});
+    setViewOnly(false);
     localStorage.setItem('iat6.murid', JSON.stringify(data));
     setRoute('arahan');
   };
@@ -103,8 +123,8 @@ function App() {
   };
 
   const handleHome = () => {
-    ['iat6.murid','iat6.jawapan','iat6.idx','iat6.route','iat6.startedAt'].forEach(k => localStorage.removeItem(k));
-    setMurid(null); setJawapan({}); setStartedAt(null); setTimeLeft(null); setRoute('welcome');
+    ['iat6.murid','iat6.jawapan','iat6.idx','iat6.route','iat6.startedAt','iat6.viewOnly'].forEach(k => localStorage.removeItem(k));
+    setMurid(null); setJawapan({}); setStartedAt(null); setTimeLeft(null); setViewOnly(false); setRoute('welcome');
   };
 
   const handlePrint = () => {
@@ -161,7 +181,7 @@ function App() {
   } else {
     return (
       <>
-        <window.ResultsScreen murid={murid} jawapan={jawapan} onHome={handleHome} instrument={instrument} />
+        <window.ResultsScreen murid={murid} jawapan={jawapan} onHome={handleHome} instrument={instrument} viewOnly={viewOnly} />
         <TweaksUI tweaks={tweaks} setTweak={setTweak} duration={duration} />
       </>
     );
