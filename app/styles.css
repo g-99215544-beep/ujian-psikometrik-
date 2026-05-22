@@ -161,6 +161,12 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 }
 .identity-name { font-size: 1.05rem; line-height: 1.35; font-weight: 800; color: var(--ink); }
 .identity-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.identity-completed {
+  padding: 10px 14px; border-radius: var(--radius);
+  background: oklch(0.95 0.08 145); color: oklch(0.32 0.14 145);
+  border: 1px solid oklch(0.82 0.12 145);
+  font-weight: 600; font-size: 0.95rem;
+}
 
 /* === Arahan === */
 .arahan {
