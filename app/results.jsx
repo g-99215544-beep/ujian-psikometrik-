@@ -1,6 +1,6 @@
 // === Keputusan (results) screen ===
 
-window.ResultsScreen = function ({ murid, jawapan, onHome, instrument }) {
+window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly }) {
   const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
   const domains = active.domains || window.INTELLIGENCES;
   const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
@@ -16,6 +16,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument }) {
   const tarikh = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
 
   React.useEffect(() => {
+    if (viewOnly) return;
     if (!window.StudentDirectory || !window.StudentDirectory.saveBorangJawapan || !window.ScoreIAT6) return;
     const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
     window.StudentDirectory.saveBorangJawapan(murid, jawapan, {
