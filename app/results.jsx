@@ -3,6 +3,9 @@
 window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly }) {
   const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
   const domains = active.domains || window.INTELLIGENCES;
+  const details = window.INTELLIGENCE_DETAILS || {};
+  const supportsDetail = active.kind === 'intelligence' || active.kind === 'aptitude';
+  const [selectedDomain, setSelectedDomain] = React.useState(null);
   const score = window.ScoreInstrument ? window.ScoreInstrument(jawapan, active) : window.ScoreIAT6(jawapan);
   const aScores = score.aScores;
   const top3 = score.top3;
@@ -68,8 +71,18 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
               <div className="bar-list">
                 {aScores.map((s) => {
                   const def = domains[s.idx];
+                  const detail = supportsDetail ? details[def.key] : null;
+                  const clickable = !!detail;
+                  const open = () => setSelectedDomain(def);
                   return (
-                    <div key={s.idx} className="bar-row">
+                    <div
+                      key={s.idx}
+                      className={`bar-row${clickable ? ' clickable' : ''}`}
+                      role={clickable ? 'button' : undefined}
+                      tabIndex={clickable ? 0 : undefined}
+                      onClick={clickable ? open : undefined}
+                      onKeyDown={clickable ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } } : undefined}
+                    >
                       <div className="bar-name">
                         <span className="bdot" style={{ background: def.warna }}></span>
                         {def.nama}
@@ -155,6 +168,14 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
 
         </div>
       </div>
+
+      {selectedDomain && details[selectedDomain.key] && window.TraitModal && (
+        <window.TraitModal
+          domain={selectedDomain}
+          detail={details[selectedDomain.key]}
+          onClose={() => setSelectedDomain(null)}
+        />
+      )}
     </div>
   );
 };
