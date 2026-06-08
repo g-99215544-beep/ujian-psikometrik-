@@ -21,67 +21,69 @@ window.TraitModal = function ({ domain, detail, onClose }) {
           <h2>{domain.nama}</h2>
         </div>
 
-        {!imgFailed && (
-          <div className="trait-modal-hero">
+        {!imgFailed ? (
+          <div className=”trait-modal-hero”>
             <img
               src={posterSrc}
               alt={`Poster ${domain.nama}`}
               onError={() => setImgFailed(true)}
             />
           </div>
-        )}
+        ) : (
+          <>
+            {detail.motto && (
+              <div className=”trait-modal-section trait-modal-motto”>
+                <em>”{detail.motto}”</em>
+              </div>
+            )}
 
-        {detail.motto && (
-          <div className="trait-modal-section trait-modal-motto">
-            <em>“{detail.motto}”</em>
-          </div>
-        )}
+            {detail.ringkasan && (
+              <div className=”trait-modal-section”>
+                <p>{detail.ringkasan}</p>
+              </div>
+            )}
 
-        {detail.ringkasan && (
-          <div className="trait-modal-section">
-            <p>{detail.ringkasan}</p>
-          </div>
-        )}
+            {detail.ciri && detail.ciri.length > 0 && (
+              <div className=”trait-modal-section”>
+                <h3>Ciri-ciri</h3>
+                <ul>
+                  {detail.ciri.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </div>
+            )}
 
-        {detail.ciri && detail.ciri.length > 0 && (
-          <div className="trait-modal-section">
-            <h3>Ciri-ciri</h3>
-            <ul>
-              {detail.ciri.map((item, i) => <li key={i}>{item}</li>)}
-            </ul>
-          </div>
-        )}
+            {detail.kemahiran && detail.kemahiran.length > 0 && (
+              <div className=”trait-modal-section”>
+                <h3>Kemahiran Belajar Berkesan</h3>
+                <ol className=”kemahiran-list”>
+                  {detail.kemahiran.map((item, i) => (
+                    <li key={i} className=”kemahiran-item”>
+                      <strong>{item.judul}</strong>
+                      <span>{item.huraian}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
 
-        {detail.kemahiran && detail.kemahiran.length > 0 && (
-          <div className="trait-modal-section">
-            <h3>Kemahiran Belajar Berkesan</h3>
-            <ol className="kemahiran-list">
-              {detail.kemahiran.map((item, i) => (
-                <li key={i} className="kemahiran-item">
-                  <strong>{item.judul}</strong>
-                  <span>{item.huraian}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
+            {detail.tip && detail.tip.length > 0 && (
+              <div className=”trait-modal-section”>
+                <h3>Tip Hebat</h3>
+                <ul>
+                  {detail.tip.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </div>
+            )}
 
-        {detail.tip && detail.tip.length > 0 && (
-          <div className="trait-modal-section">
-            <h3>Tip Hebat</h3>
-            <ul>
-              {detail.tip.map((item, i) => <li key={i}>{item}</li>)}
-            </ul>
-          </div>
-        )}
-
-        {detail.kerjaya && detail.kerjaya.length > 0 && (
-          <div className="trait-modal-section">
-            <h3>Sesuai Dengan Kerjaya</h3>
-            <ul className="kerjaya-list">
-              {detail.kerjaya.map((item, i) => <li key={i}>{item}</li>)}
-            </ul>
-          </div>
+            {detail.kerjaya && detail.kerjaya.length > 0 && (
+              <div className=”trait-modal-section”>
+                <h3>Sesuai Dengan Kerjaya</h3>
+                <ul className=”kerjaya-list”>
+                  {detail.kerjaya.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
