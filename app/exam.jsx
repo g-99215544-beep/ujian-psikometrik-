@@ -1,5 +1,31 @@
 // === Ujian (exam) screen - handles both Bahagian A and B ===
 
+// Short synthesized "click" played each time an answer is selected.
+// Uses Web Audio so no audio asset/network is needed; the AudioContext is
+// created lazily on the first click (a user gesture, so autoplay is allowed).
+let _answerAudioCtx = null;
+function playAnswerSound() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!_answerAudioCtx) _answerAudioCtx = new AC();
+    const ctx = _answerAudioCtx;
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(660, now);
+    osc.frequency.exponentialRampToValueAtTime(900, now + 0.06);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.17);
+  } catch (e) { /* ignore audio errors */ }
+}
+
 window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, tweaks, timeLeft, instrument }) {
   const active = instrument || (window.GetInstrumentForMurid ? window.GetInstrumentForMurid(murid) : window.INSTRUMENTS[6]);
   const sectionA = active.sectionA || [];
@@ -33,6 +59,7 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
   const answeredCount = Object.keys(jawapan).length;
 
   const setAns = (val) => {
+    playAnswerSound();
     setJawapan(j => ({ ...j, [key]: val }));
     if ((isA || active.autoAdvance) && idx < maxIdx) {
       setNavDirection('next');
