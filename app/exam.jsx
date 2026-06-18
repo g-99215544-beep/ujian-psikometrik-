@@ -157,7 +157,7 @@ function BahagianBItem({ item, value, onChange }) {
         </>
       )}
       <div className={hasPdfImage ? 'pdf-answer-grid' : 'choices'}>
-        {item.pilihan.map((p, i) => {
+        {(item.pilihan || ['A', 'B', 'C', 'D']).map((p, i) => {
           const k = ['A', 'B', 'C', 'D'][i];
           return (
             <button key={k}
