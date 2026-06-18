@@ -93,10 +93,10 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
         <main className="q-area">
           <div key={idx} className={`question-slide ${navDirection === 'prev' ? 'from-left' : 'from-right'}`}>
             <div className="q-meta">
-              <span className="chip section">Bahagian {isA ? 'A' : 'B'}</span>
+              <span className="chip section">Bahagian {item.bahagian || (isA ? 'A' : 'B')}</span>
               <span className="chip">Soalan {item.no} / {isA ? totalA : totalB}</span>
               <span style={{ flex: 1 }}></span>
-              <span>{isA ? active.sectionALabel : active.sectionBName}</span>
+              <span>{item.bahagianNama || (isA ? active.sectionALabel : active.sectionBName)}</span>
             </div>
 
             {isA
@@ -145,9 +145,10 @@ function BahagianBItem({ item, value, onChange }) {
   const hasPdfImage = Boolean(item.pdfImage);
   return (
     <>
+      {item.arahan && <p className="q-arahan">{item.arahan}</p>}
       {hasPdfImage ? (
         <div className="pdf-question-wrap">
-          <img className="pdf-question-image" src={item.pdfImage} alt={`Bahagian B soalan ${item.no}`} loading="lazy" />
+          <img className="pdf-question-image" src={item.pdfImage} alt={`Soalan ${item.no}`} loading="lazy" />
         </div>
       ) : (
         <>
