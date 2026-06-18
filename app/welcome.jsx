@@ -160,6 +160,9 @@ window.ArahanScreen = function ({ onContinue, onBack, instrument }) {
   const active = instrument || (window.INSTRUMENTS && window.INSTRUMENTS[6]);
   const total = active.sectionA.length + active.sectionB.length;
   const minutes = Math.round((active.duration || 0) / 60);
+  const sectionGroups = Array.isArray(active.sectionBGroups) ? active.sectionBGroups : null;
+  // "Bahagian A · Bahasa Melayu" -> "Bahasa Melayu"
+  const sectionName = (g) => String(g.title || '').split('·').pop().trim();
   return (
     <div className="arahan">
       <div className="arahan-card">
@@ -168,21 +171,35 @@ window.ArahanScreen = function ({ onContinue, onBack, instrument }) {
 
         <ol>
           <li>Pentaksiran ini mengandungi <strong>{total} soalan</strong>.</li>
+          {sectionGroups && (
+            <li>Pentaksiran ini mengandungi <strong>{sectionGroups.length} bahagian</strong>: {sectionGroups.map(g => sectionName(g)).join(', ')}.</li>
+          )}
           <li>Anda diberi <strong>{minutes} minit</strong> untuk menjawab kesemua soalan.</li>
           <li>Bagi setiap soalan, pilih <strong>satu jawapan sahaja</strong>.</li>
           <li>Anda boleh berundur ke soalan sebelum dengan butang <em>Sebelum</em> atau peta soalan di tepi.</li>
           <li>Jawapan anda akan disimpan secara automatik. Jika anda menutup pelayar, anda boleh menyambung semula.</li>
         </ol>
 
-        <div className="arahan-section">
-          <h3><span className="badge">A</span> {active.sectionAName} · {active.sectionA.length} soalan</h3>
-          <p>Tandakan <strong>YA</strong> jika anda <em>setuju</em> dengan pernyataan tentang diri anda, atau <strong>TIDAK</strong> jika anda <em>tidak setuju</em>. Jawablah dengan jujur - tiada jawapan betul atau salah.</p>
-        </div>
+        {active.sectionA.length > 0 && (
+          <div className="arahan-section">
+            <h3><span className="badge">A</span> {active.sectionAName} · {active.sectionA.length} soalan</h3>
+            <p>Tandakan <strong>YA</strong> jika anda <em>setuju</em> dengan pernyataan tentang diri anda, atau <strong>TIDAK</strong> jika anda <em>tidak setuju</em>. Jawablah dengan jujur - tiada jawapan betul atau salah.</p>
+          </div>
+        )}
 
-        {active.sectionB.length > 0 && <div className="arahan-section">
-          <h3><span className="badge">B</span> Kemahiran Menaakul &amp; Menyelesaikan Masalah · 30 soalan</h3>
-          <p>Pilih jawapan yang paling tepat dari pilihan A, B, C, atau D. Beberapa soalan disertakan dengan rajah atau jadual.</p>
-        </div>}
+        {sectionGroups ? (
+          sectionGroups.map((g, i) => (
+            <div className="arahan-section" key={i}>
+              <h3><span className="badge">{['A', 'B', 'C', 'D'][i] || '•'}</span> {sectionName(g)} · {g.end - g.start + 1} soalan</h3>
+              <p>{g.focus} Pilih jawapan yang paling tepat dari pilihan A, B, C, atau D.</p>
+            </div>
+          ))
+        ) : (active.sectionB.length > 0 && (
+          <div className="arahan-section">
+            <h3><span className="badge">B</span> Kemahiran Menaakul &amp; Menyelesaikan Masalah · {active.sectionB.length} soalan</h3>
+            <p>Pilih jawapan yang paling tepat dari pilihan A, B, C, atau D. Beberapa soalan disertakan dengan rajah atau jadual.</p>
+          </div>
+        ))}
 
         <div className="welcome-actions">
           <button onClick={onBack} className="btn btn-ghost">← Kembali</button>
