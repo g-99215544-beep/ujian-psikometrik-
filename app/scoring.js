@@ -111,6 +111,12 @@
         Baik: 'Kemahiran aptitud Bahagian B berada pada tahap baik.',
         Sederhana: 'Kemahiran aptitud Bahagian B berada pada tahap sederhana dan boleh diperkukuh dengan latihan berkala.',
         'Perlu Bimbingan': 'Kemahiran aptitud Bahagian B memerlukan sokongan dan latihan berstruktur.'
+      },
+      general: {
+        Cemerlang: 'Pencapaian cemerlang dalam bahagian ini.',
+        Baik: 'Pencapaian baik dalam bahagian ini.',
+        Sederhana: 'Pencapaian sederhana; boleh diperkukuh dengan latihan berkala.',
+        'Perlu Bimbingan': 'Memerlukan sokongan dan latihan berstruktur dalam bahagian ini.'
       }
     };
     return copy[kind][label];
@@ -165,7 +171,8 @@
       const userAns = answers[`B${q.no}`];
       return {
         no: q.no,
-        teks: q.teks.split('\n')[0],
+        teks: q.teks ? q.teks.split('\n')[0] : `Soalan ${q.no}`,
+        bahagian: q.bahagian || null,
         userAns: userAns || '-',
         correct: q.jawapan,
         isRight: userAns === q.jawapan
@@ -192,6 +199,10 @@
       'Penyelesaian masalah numerik dan aplikasi matematik harian.',
       'problem'
     ) : null;
+    const groupDefs = Array.isArray(active.sectionBGroups) ? active.sectionBGroups : null;
+    const groups = groupDefs
+      ? groupDefs.map(g => bGroup(bResults, g.start, g.end, g.title, g.focus, g.kind || 'general'))
+      : null;
     const topDomainText = top3.length
       ? `Kecenderungan utama murid ialah ${top3.map(s => s.nama).join(', ')}.`
       : 'Kecenderungan domain belum dapat dikenal pasti.';
@@ -212,6 +223,7 @@
       },
       bReasoning,
       bProblemSolving,
+      groups,
       bahagianB: {
         title: 'Bahagian B',
         focus: 'Kemahiran menaakul dan menyelesaikan masalah.',
@@ -234,6 +246,7 @@
       bPct,
       bReasoning,
       bProblemSolving,
+      groups,
       analysis
     };
   }

@@ -217,6 +217,13 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 .q-stem { font-size: 1.15rem; line-height: 1.5; margin: 0 0 28px; white-space: pre-line; }
 .q-stem strong { color: var(--ink); }
 
+.q-arahan {
+  font-size: 0.98rem; line-height: 1.45; margin: 0 0 16px;
+  padding: 10px 14px; border-left: 3px solid var(--accent);
+  background: var(--accent-soft); border-radius: 8px;
+  color: var(--ink); font-weight: 600;
+}
+
 .choices { display: flex; flex-direction: column; gap: 10px; }
 .choice {
   display: flex; align-items: flex-start; gap: 14px;
