@@ -34,7 +34,7 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
 
   const setAns = (val) => {
     setJawapan(j => ({ ...j, [key]: val }));
-    if (isA && idx < maxIdx) {
+    if ((isA || active.autoAdvance) && idx < maxIdx) {
       setNavDirection('next');
       window.setTimeout(() => {
         setIdx(prev => prev === idx ? Math.min(idx + 1, maxIdx) : prev);
@@ -109,7 +109,9 @@ window.ExamScreen = function ({ murid, jawapan, setJawapan, onComplete, onHome, 
             <span className="q-footer-tip">
               {isA
                 ? 'Jawapan YA/TIDAK akan terus ke soalan seterusnya.'
-                : (!current ? 'Pilih satu jawapan untuk teruskan' : (idx === maxIdx ? 'Soalan terakhir - semak jawapan sebelum hantar' : 'Tekan Seterusnya'))}
+                : (active.autoAdvance && idx !== maxIdx
+                    ? 'Memilih jawapan akan terus ke soalan seterusnya.'
+                    : (!current ? 'Pilih satu jawapan untuk teruskan' : (idx === maxIdx ? 'Soalan terakhir - semak jawapan sebelum hantar' : 'Tekan Seterusnya')))}
             </span>
             {idx === maxIdx
               ? <button className="btn btn-accent" onClick={onComplete}>Tamatkan</button>

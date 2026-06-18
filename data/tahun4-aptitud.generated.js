@@ -598,6 +598,7 @@
       sectionA: [],
       sectionB: window.BAHAGIAN_APTITUD_T4,
       sectionBGroups: groups,
+      autoAdvance: true,
     };
     return true;
   }

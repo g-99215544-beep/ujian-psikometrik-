@@ -201,6 +201,7 @@ def write_js():
         "      sectionA: [],\n"
         "      sectionB: window.BAHAGIAN_APTITUD_T4,\n"
         "      sectionBGroups: groups,\n"
+        "      autoAdvance: true,\n"
         "    };\n"
         "    return true;\n"
         "  }\n"
