@@ -14,6 +14,8 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
   const bPct = score.bPct;
   const analysis = score.analysis;
   const hasB = bResults.length > 0;
+  const groups = analysis.groups; // array for IAA_T4, null for Tahun 6
+  const hasDomains = domains && domains.length > 0 && top3.length > 0;
   const topLabel = active.kind === 'traits' ? '3 Tret Dominan' : '3 Kecerdasan Dominan';
 
   const tarikh = new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -65,6 +67,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
 
           <div className="res-stack">
             {/* 1 — Trait dominan (klik untuk poster) */}
+            {hasDomains && (
             <div className="res-card">
               <h2>{topLabel}</h2>
               <p className="res-card-sub">Klik pada kad untuk melihat poster dan panduan belajar.</p>
@@ -97,8 +100,10 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                 })}
               </div>
             </div>
+            )}
 
             {/* 2 — Bilangan jawapan bagi setiap domain */}
+            {hasDomains && (
             <div className="res-card">
               <h2>Bahagian A · {active.sectionAName}</h2>
               <p className="res-card-sub">Bilangan jawapan YA bagi setiap domain.</p>
@@ -130,9 +135,43 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                 })}
               </div>
             </div>
+            )}
 
-            {/* 3 — Analisis Bahagian B (tahun 6 sahaja) */}
-            {hasB && (
+            {/* 3 — Keputusan aptitud (Tahun 4) atau Analisis Bahagian B (Tahun 6) */}
+            {groups ? (
+              <div className="res-card">
+                <h2>Keputusan Aptitud</h2>
+                <p className="res-card-sub">Markah keseluruhan dan pecahan mengikut bahagian.</p>
+                <p className="score-big">{bRight}<small>/{bResults.length}</small></p>
+                <p className="score-cap">
+                  {bPct >= 80 ? 'Cemerlang — majoriti soalan dijawab dengan tepat.' :
+                   bPct >= 60 ? 'Baik — pencapaian aptitud yang kukuh.' :
+                   bPct >= 40 ? 'Sederhana — teruskan latihan untuk meningkatkan markah.' :
+                                'Perlu bimbingan dan latihan tambahan.'}
+                </p>
+                <div className="score-bar">
+                  <div className="score-bar-fill" style={{ width: `${bPct}%` }}></div>
+                </div>
+                <div className="score-legend">
+                  <div><strong style={{ color: 'var(--ok)' }}>● {bRight}</strong> betul</div>
+                  <div><strong style={{ color: 'var(--err)' }}>● {bResults.length - bRight}</strong> salah / kosong</div>
+                  <div><strong>{bPct}%</strong></div>
+                </div>
+                <div className="analysis-grid" style={{ marginTop: 20 }}>
+                  {groups.map((g) => (
+                    <AnalysisBlock
+                      key={g.start}
+                      title={g.title}
+                      scoreText={`${g.right}/${g.total}`}
+                      level={g.level}
+                      tone={g.tone}
+                      focus={g.focus}
+                      description={g.description}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (hasB && (
               <div className="res-card">
                 <h2>Analisis Bahagian B</h2>
                 <p className="res-card-sub">Kemahiran menaakul &amp; menyelesaikan masalah.</p>
@@ -170,7 +209,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                   />}
                 </div>
               </div>
-            )}
+            ))}
           </div>
 
         </div>
