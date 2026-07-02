@@ -10,6 +10,7 @@ window.AdminScreen = function ({ onBack }) {
   const [printingAll, setPrintingAll] = React.useState(false);
   const [printingRecord, setPrintingRecord] = React.useState(null);
   const [viewMode, setViewMode] = React.useState('table');
+  const [adminTab, setAdminTab] = React.useState('markah');
   const [status, setStatus] = React.useState('idle');
   const [message, setMessage] = React.useState('');
   const prevTitleRef = React.useRef('');
@@ -200,7 +201,7 @@ window.AdminScreen = function ({ onBack }) {
         <div className="admin-header">
           <div>
             <div className="welcome-eyebrow">Admin</div>
-            <h1>Markah Murid</h1>
+            <h1>{adminTab === 'analisis' ? 'Analisis Tahun' : 'Markah Murid'}</h1>
           </div>
           <div className="admin-actions">
             <button className="btn" onClick={loadRecords} disabled={status === 'loading'}>
@@ -214,6 +215,24 @@ window.AdminScreen = function ({ onBack }) {
           </div>
         </div>
 
+        <div className="view-tabs admin-main-tabs">
+          <button
+            className={`view-tab ${adminTab === 'markah' ? 'active' : ''}`}
+            onClick={() => setAdminTab('markah')}>
+            &#8862; Markah Murid
+          </button>
+          <button
+            className={`view-tab ${adminTab === 'analisis' ? 'active' : ''}`}
+            onClick={() => setAdminTab('analisis')}>
+            &#128202; Analisis Tahun
+          </button>
+        </div>
+
+        {adminTab === 'analisis' && window.ClassAnalysis && (
+          <window.ClassAnalysis records={records} />
+        )}
+
+        {adminTab === 'markah' && (<>
         {/* Class selector */}
         <div className="admin-card">
           <label className="fld">
@@ -376,6 +395,7 @@ window.AdminScreen = function ({ onBack }) {
             }
           </div>
         )}
+        </>)}
       </div>
     </div>
   );

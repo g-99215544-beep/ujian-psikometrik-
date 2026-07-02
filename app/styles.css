@@ -769,3 +769,130 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
 @media print {
   .trait-modal-overlay { display: none !important; }
 }
+
+/* === Analisis Tahun / Kelas (admin) === */
+.admin-main-tabs { margin-bottom: 4px; }
+
+.ca-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.ca-year-tabs { display: flex; gap: 8px; }
+.ca-year-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  font-weight: 600; font-size: 0.9rem; color: var(--ink-2);
+  transition: all .15s ease;
+}
+.ca-year-tab:hover { border-color: var(--ink-2); }
+.ca-year-tab.active { background: var(--ink); border-color: var(--ink); color: white; }
+.ca-year-count {
+  font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2);
+}
+.ca-year-tab.active .ca-year-count { background: rgba(255,255,255,.2); color: white; }
+.ca-controls-right { display: flex; gap: 10px; align-items: center; }
+.ca-controls-right select { min-width: 160px; }
+
+.ca-title h2 { margin: 0 0 4px; }
+.ca-title { margin-bottom: 16px; }
+.ca-empty { color: var(--muted); padding: 24px 0; }
+
+.ca-body { display: grid; gap: 16px; }
+.ca-body .res-card { margin: 0; }
+
+.ca-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.ca-card {
+  border: 1px solid var(--line); border-left-width: 4px; border-radius: var(--radius);
+  background: var(--surface); padding: 14px 16px; box-shadow: var(--shadow-sm);
+}
+.ca-card-icon { font-size: 1.3rem; margin-bottom: 4px; }
+.ca-card-name { font-weight: 700; font-size: 0.82rem; }
+.ca-card-value { font-size: 1.5rem; font-weight: 800; margin-top: 2px; }
+.ca-card-stars { color: #D4A017; letter-spacing: 2px; font-size: 0.85rem; }
+.ca-card-sub { color: var(--muted); font-size: 0.72rem; }
+
+.ca-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .ca-grid-2 { grid-template-columns: 1fr; } }
+
+.ca-chart-card svg { width: 100%; height: auto; max-width: 480px; display: block; margin: 0 auto; }
+.ca-donut { max-width: 260px !important; }
+.ca-radar { max-width: 320px !important; }
+
+.ca-legend {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 6px 12px; margin-top: 14px; font-size: 0.8rem; color: var(--ink-2); font-weight: 600;
+}
+.ca-legend-item { display: flex; align-items: center; gap: 6px; }
+.ca-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none;
+  vertical-align: middle;
+}
+
+.ca-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.ca-table th, .ca-table td { padding: 8px 10px; border-bottom: 1px solid var(--line-2); text-align: left; }
+.ca-table th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.ca-th-tinggi, .ca-td-tinggi { color: var(--ok); text-align: center !important; font-weight: 700; }
+.ca-th-sederhana, .ca-td-sederhana { color: #B8860B; text-align: center !important; font-weight: 700; }
+.ca-th-rendah, .ca-td-rendah { color: var(--err); text-align: center !important; font-weight: 700; }
+
+.ca-bstats {
+  display: flex; gap: 24px; margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+}
+.ca-bstats strong { display: block; font-size: 1.2rem; }
+
+.ca-auto {
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, oklch(0.50 0.16 265), oklch(0.55 0.20 300));
+  color: white; padding: 18px 22px;
+}
+.ca-auto-title { font-weight: 800; margin-bottom: 6px; }
+.ca-auto p { margin: 0; line-height: 1.55; font-size: 0.92rem; }
+
+.ca-strategies {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;
+}
+.ca-strategy {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2);
+  padding: 14px 10px; text-align: center; font-weight: 600; font-size: 0.82rem;
+}
+.ca-strategy-icon { font-size: 1.4rem; margin-bottom: 6px; }
+
+.ca-styles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.ca-style {
+  border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  border-radius: var(--radius); padding: 12px 16px; background: var(--surface);
+}
+.ca-style-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ca-style-icon { font-size: 1.1rem; }
+.ca-style ul { margin: 0; padding-left: 18px; font-size: 0.85rem; color: var(--ink-2); }
+.ca-style li { margin-bottom: 3px; }
+
+.ca-group { margin-bottom: 18px; break-inside: avoid; }
+.ca-group-head {
+  display: flex; justify-content: space-between; align-items: center;
+  color: white; font-weight: 700; font-size: 0.9rem;
+  padding: 8px 14px; border-radius: 8px; margin-bottom: 8px;
+}
+.ca-group-kelas { margin: 6px 0 10px; }
+.ca-group-kelas-name {
+  font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--ink-2); margin-bottom: 4px;
+}
+.ca-names { margin: 0; padding-left: 22px; columns: 2; column-gap: 28px; font-size: 0.88rem; }
+.ca-names li { break-inside: avoid; margin-bottom: 3px; }
+.ca-names small { color: var(--muted); }
+@media (max-width: 620px) { .ca-names { columns: 1; } }
+.ca-note { color: var(--muted); font-size: 0.82rem; }
+
+@media print {
+  .admin-main-tabs, .ca-controls { display: none !important; }
+  .ca-body .res-card, .ca-card, .ca-auto, .ca-group { break-inside: avoid; }
+  .ca-auto { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ca-group-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
