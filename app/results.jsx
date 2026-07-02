@@ -193,7 +193,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                 <div className="analysis-grid" style={{ marginTop: 20 }}>
                   {analysis.bReasoning && <AnalysisBlock
                     title="Bahagian B 1-15"
-                    scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
+                    scoreText={`${analysis.bReasoning.pct}% (${analysis.bReasoning.right}/${analysis.bReasoning.total})`}
                     level={analysis.bReasoning.level}
                     tone={analysis.bReasoning.tone}
                     focus={analysis.bReasoning.focus}
@@ -201,7 +201,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                   />}
                   {analysis.bProblemSolving && <AnalysisBlock
                     title="Bahagian B 16-30"
-                    scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
+                    scoreText={`${analysis.bProblemSolving.pct}% (${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total})`}
                     level={analysis.bProblemSolving.level}
                     tone={analysis.bProblemSolving.tone}
                     focus={analysis.bProblemSolving.focus}

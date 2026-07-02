@@ -396,7 +396,7 @@ function AdminAnalysis({ analysis }) {
       />
       {analysis.bReasoning && <AdminAnalysisBlock
         title="Bahagian B 1-15"
-        scoreText={`${analysis.bReasoning.right}/${analysis.bReasoning.total}`}
+        scoreText={`${analysis.bReasoning.pct}% (${analysis.bReasoning.right}/${analysis.bReasoning.total})`}
         level={analysis.bReasoning.level}
         tone={analysis.bReasoning.tone}
         focus={analysis.bReasoning.focus}
@@ -404,7 +404,7 @@ function AdminAnalysis({ analysis }) {
       />}
       {analysis.bProblemSolving && <AdminAnalysisBlock
         title="Bahagian B 16-30"
-        scoreText={`${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total}`}
+        scoreText={`${analysis.bProblemSolving.pct}% (${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total})`}
         level={analysis.bProblemSolving.level}
         tone={analysis.bProblemSolving.tone}
         focus={analysis.bProblemSolving.focus}
@@ -598,8 +598,8 @@ function ClassTable({ records, instrument, onPrint }) {
                 {hasBahagianB && (
                   sc && sc.bReasoning ? (
                     <>
-                      <td><span className="ct-score-b">{sc.bReasoning.right}</span></td>
-                      <td><span className="ct-score-b">{sc.bProblemSolving.right}</span></td>
+                      <td><span className="ct-score-b">{sc.bReasoning.pct}%</span></td>
+                      <td><span className="ct-score-b">{sc.bProblemSolving.pct}%</span></td>
                     </>
                   ) : (
                     <>
