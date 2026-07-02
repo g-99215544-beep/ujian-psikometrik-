@@ -394,22 +394,36 @@ function AdminAnalysis({ analysis }) {
         description={analysis.bahagianA.description}
         details={analysis.bahagianA.topDomains}
       />
-      {analysis.bReasoning && <AdminAnalysisBlock
-        title="Bahagian B 1-15"
-        scoreText={`${analysis.bReasoning.pct}% (${analysis.bReasoning.right}/${analysis.bReasoning.total})`}
-        level={analysis.bReasoning.level}
-        tone={analysis.bReasoning.tone}
-        focus={analysis.bReasoning.focus}
-        description={analysis.bReasoning.description}
-      />}
-      {analysis.bProblemSolving && <AdminAnalysisBlock
-        title="Bahagian B 16-30"
-        scoreText={`${analysis.bProblemSolving.pct}% (${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total})`}
-        level={analysis.bProblemSolving.level}
-        tone={analysis.bProblemSolving.tone}
-        focus={analysis.bProblemSolving.focus}
-        description={analysis.bProblemSolving.description}
-      />}
+      {analysis.groups ? (
+        analysis.groups.map(g => <AdminAnalysisBlock
+          key={g.start}
+          title={g.title}
+          scoreText={`${g.pct}% (${g.right}/${g.total})`}
+          level={g.level}
+          tone={g.tone}
+          focus={g.focus}
+          description={g.description}
+        />)
+      ) : (
+        <>
+          {analysis.bReasoning && <AdminAnalysisBlock
+            title="Bahagian B 1-15"
+            scoreText={`${analysis.bReasoning.pct}% (${analysis.bReasoning.right}/${analysis.bReasoning.total})`}
+            level={analysis.bReasoning.level}
+            tone={analysis.bReasoning.tone}
+            focus={analysis.bReasoning.focus}
+            description={analysis.bReasoning.description}
+          />}
+          {analysis.bProblemSolving && <AdminAnalysisBlock
+            title="Bahagian B 16-30"
+            scoreText={`${analysis.bProblemSolving.pct}% (${analysis.bProblemSolving.right}/${analysis.bProblemSolving.total})`}
+            level={analysis.bProblemSolving.level}
+            tone={analysis.bProblemSolving.tone}
+            focus={analysis.bProblemSolving.focus}
+            description={analysis.bProblemSolving.description}
+          />}
+        </>
+      )}
     </div>
   );
 }
@@ -535,6 +549,19 @@ function ClassTable({ records, instrument, onPrint }) {
 
   const domains = instrument.domains || [];
   const hasBahagianB = (instrument.sectionB || []).length > 0;
+  const bGroups = Array.isArray(instrument.sectionBGroups) ? instrument.sectionBGroups : null;
+  const bCols = hasBahagianB
+    ? (bGroups
+        ? bGroups.map(g => ({
+            key: `g${g.start}`,
+            label: (g.title.split('·').pop() || g.title).trim(),
+            range: `(${g.start}–${g.end})`
+          }))
+        : [
+            { key: 'reason', label: 'Menaakul', range: '(1–15)' },
+            { key: 'solve', label: 'Penyelesaian', range: '(16–30)' }
+          ])
+    : [];
 
   const rows = records.map(record => ({
     record,
@@ -549,15 +576,14 @@ function ClassTable({ records, instrument, onPrint }) {
         React.createElement('th', { className: 'ct-sticky ct-bil', rowSpan: 2 }, 'Bil.'),
         React.createElement('th', { className: 'ct-sticky ct-nama', rowSpan: 2 }, 'Nama'),
         React.createElement('th', { className: 'ct-sticky ct-id', rowSpan: 2 }, 'ID Pengenalan'),
-        React.createElement('th', { colSpan: domains.length, className: 'ct-th-a' }, 'BAHAGIAN A — Kecerdasan Pelbagai'),
-        React.createElement('th', { colSpan: 2, className: 'ct-th-b' }, 'BAHAGIAN B'),
+        domains.length > 0 && React.createElement('th', { colSpan: domains.length, className: 'ct-th-a' }, 'BAHAGIAN A — Kecerdasan Pelbagai'),
+        React.createElement('th', { colSpan: bCols.length, className: 'ct-th-b' }, bGroups ? 'MARKAH APTITUD (%)' : 'BAHAGIAN B (%)'),
         React.createElement('th', { rowSpan: 2 }, 'Status'),
         React.createElement('th', { rowSpan: 2 }, 'Cetak')
       ),
       React.createElement('tr', null,
         ...domains.map(d => React.createElement('th', { key: d.key || d.nama }, d.nama)),
-        React.createElement('th', null, 'Menaakul', React.createElement('br'), React.createElement('small', { style: { fontWeight: 400 } }, '(1–15)')),
-        React.createElement('th', null, 'Penyelesaian', React.createElement('br'), React.createElement('small', { style: { fontWeight: 400 } }, '(16–30)'))
+        ...bCols.map(c => React.createElement('th', { key: c.key }, c.label, React.createElement('br'), React.createElement('small', { style: { fontWeight: 400 } }, c.range)))
       )
     )
   ) : (
@@ -595,19 +621,19 @@ function ClassTable({ records, instrument, onPrint }) {
                   );
                 })}
 
-                {hasBahagianB && (
-                  sc && sc.bReasoning ? (
-                    <>
-                      <td><span className="ct-score-b">{sc.bReasoning.pct}%</span></td>
-                      <td><span className="ct-score-b">{sc.bProblemSolving.pct}%</span></td>
-                    </>
-                  ) : (
-                    <>
-                      <td><span className="ct-pending">—</span></td>
-                      <td><span className="ct-pending">—</span></td>
-                    </>
-                  )
-                )}
+                {hasBahagianB && bCols.map((c, i) => {
+                  const vals = sc
+                    ? (bGroups ? (sc.groups || []) : [sc.bReasoning, sc.bProblemSolving])
+                    : [];
+                  const v = vals[i];
+                  return (
+                    <td key={c.key}>
+                      {v
+                        ? <span className="ct-score-b">{v.pct}%</span>
+                        : <span className="ct-pending">—</span>}
+                    </td>
+                  );
+                })}
 
                 <td><span className="ct-done">Selesai</span></td>
                 <td>
