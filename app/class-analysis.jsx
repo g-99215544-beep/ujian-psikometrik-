@@ -456,7 +456,7 @@ function CaAptitudeAnalysis({ scored, label, groupByKelas }) {
     withGroups.forEach(({ record, sc }) => {
       sc.groups.forEach(g => {
         if (!groupStats[g.title]) {
-          groupStats[g.title] = { title: g.title, sumPct: 0, n: 0, bands: { Cemerlang: 0, Baik: 0, Sederhana: 0, 'Perlu Bimbingan': 0 } };
+          groupStats[g.title] = { title: g.title, short: g.short, sumPct: 0, n: 0, bands: { Cemerlang: 0, Baik: 0, Sederhana: 0, 'Perlu Bimbingan': 0 } };
         }
         const gs = groupStats[g.title];
         gs.sumPct += g.pct;
@@ -484,6 +484,7 @@ function CaAptitudeAnalysis({ scored, label, groupByKelas }) {
   }
 
   const shortTitle = t => (t.split('·').pop() || t).trim();
+  const groupLabel = g => g.short || shortTitle(g.title);
 
   return (
     <div className="ca-body">
@@ -498,7 +499,7 @@ function CaAptitudeAnalysis({ scored, label, groupByKelas }) {
         </div>
         {data.groups.map(g => (
           <div key={g.title} className="ca-card">
-            <div className="ca-card-name">{shortTitle(g.title)}</div>
+            <div className="ca-card-name">{groupLabel(g)}</div>
             <div className="ca-card-value">{g.n ? Math.round(g.sumPct / g.n) : 0}%</div>
             <div className="ca-card-sub">purata</div>
           </div>
@@ -512,7 +513,7 @@ function CaAptitudeAnalysis({ scored, label, groupByKelas }) {
           <CaBarChart
             unit="%"
             items={data.groups.map(g => ({
-              code: shortTitle(g.title),
+              code: groupLabel(g),
               label: shortTitle(g.title),
               value: g.n ? Math.round(g.sumPct / g.n) : 0,
               color: '#5B8DEF',
@@ -533,7 +534,7 @@ function CaAptitudeAnalysis({ scored, label, groupByKelas }) {
             <tbody>
               {data.groups.map(g => (
                 <tr key={g.title}>
-                  <td>{shortTitle(g.title)}</td>
+                  <td>{groupLabel(g)}</td>
                   {CA_BANDS.map(b => <td key={b} style={{ textAlign: 'center', fontWeight: 700 }}>{g.bands[b] || 0}</td>)}
                 </tr>
               ))}

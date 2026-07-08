@@ -122,7 +122,7 @@
     return copy[kind][label];
   }
 
-  function bGroup(results, start, end, title, focus, kind) {
+  function bGroup(results, start, end, title, focus, kind, short) {
     const items = results.filter(r => r.no >= start && r.no <= end);
     const right = items.filter(r => r.isRight).length;
     const level = band(right, items.length || 1);
@@ -130,6 +130,7 @@
       start,
       end,
       title,
+      short: short || null,
       focus,
       right,
       total: items.length,
@@ -201,7 +202,7 @@
     ) : null;
     const groupDefs = Array.isArray(active.sectionBGroups) ? active.sectionBGroups : null;
     const groups = groupDefs
-      ? groupDefs.map(g => bGroup(bResults, g.start, g.end, g.title, g.focus, g.kind || 'general'))
+      ? groupDefs.map(g => bGroup(bResults, g.start, g.end, g.title, g.focus, g.kind || 'general', g.short))
       : null;
     const topDomainText = top3.length
       ? `Kecenderungan utama murid ialah ${top3.map(s => s.nama).join(', ')}.`

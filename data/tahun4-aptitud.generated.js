@@ -573,13 +573,17 @@
   }
 ];
 
+  // 9 kumpulan kemahiran mengikut Kertas Jawapan rasmi IAA_T4 (BM/BI/Matematik).
   var groups = [
-    { start: 1,  end: 30, title: 'Bahagian A \u00b7 Bahasa Melayu',
-      focus: 'Kemahiran bahasa, perbendaharaan kata dan penaakulan verbal Bahasa Melayu.', kind: 'general' },
-    { start: 31, end: 60, title: 'Bahagian B \u00b7 Bahasa Inggeris',
-      focus: 'Perbendaharaan kata, hubungan kata dan penaakulan verbal Bahasa Inggeris.', kind: 'general' },
-    { start: 61, end: 80, title: 'Bahagian C \u00b7 Matematik',
-      focus: 'Pola nombor, penaakulan kuantitatif dan penyelesaian masalah matematik.', kind: 'general' },
+    { start: 1,  end: 10, title: 'Verbal Linguistik BM 1', short: 'BM 1', focus: 'Kemahiran Perkataan', kind: 'general' },
+    { start: 11, end: 25, title: 'Verbal Linguistik BM 2', short: 'BM 2', focus: 'Kemahiran Konsep Verbal', kind: 'general' },
+    { start: 26, end: 30, title: 'Verbal Linguistik BM 3', short: 'BM 3', focus: 'Kemahiran Aplikasi Kritikal', kind: 'general' },
+    { start: 31, end: 35, title: 'Verbal Linguistik BI 1', short: 'BI 1', focus: 'Words Skills', kind: 'general' },
+    { start: 36, end: 55, title: 'Verbal Linguistik BI 2', short: 'BI 2', focus: 'Verbal Concept Skills', kind: 'general' },
+    { start: 56, end: 60, title: 'Verbal Linguistik BI 3', short: 'BI 3', focus: 'Critical Thinking Skills', kind: 'general' },
+    { start: 61, end: 67, title: 'Logik Matematik 1', short: 'LM 1', focus: 'Sistem Numerik dan Logik Nombor', kind: 'general' },
+    { start: 68, end: 71, title: 'Logik Matematik 2', short: 'LM 2', focus: 'Penaakulan Matematik Untuk Membuat Persepsi', kind: 'general' },
+    { start: 72, end: 80, title: 'Logik Matematik 3', short: 'LM 3', focus: 'Penyelesaian Masalah', kind: 'general' },
   ];
 
   function install() {
