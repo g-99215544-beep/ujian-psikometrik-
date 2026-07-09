@@ -418,7 +418,7 @@ function AdminAnalysis({ analysis }) {
         analysis.groups.map(g => <AdminAnalysisBlock
           key={g.start}
           title={g.title}
-          scoreText={`${g.pct}% (${g.right}/${g.total})`}
+          scoreText={`${g.right} betul`}
           level={g.level}
           tone={g.tone}
           focus={g.focus}
@@ -597,7 +597,7 @@ function ClassTable({ records, instrument, onPrint }) {
         React.createElement('th', { className: 'ct-sticky ct-nama', rowSpan: 2 }, 'Nama'),
         React.createElement('th', { className: 'ct-sticky ct-id', rowSpan: 2 }, 'ID Pengenalan'),
         domains.length > 0 && React.createElement('th', { colSpan: domains.length, className: 'ct-th-a' }, 'BAHAGIAN A — Kecerdasan Pelbagai'),
-        React.createElement('th', { colSpan: bCols.length, className: 'ct-th-b' }, bGroups ? 'MARKAH APTITUD (%)' : 'BAHAGIAN B (%)'),
+        React.createElement('th', { colSpan: bCols.length, className: 'ct-th-b' }, bGroups ? 'MARKAH APTITUD (Bilangan Betul)' : 'BAHAGIAN B (%)'),
         React.createElement('th', { rowSpan: 2 }, 'Status'),
         React.createElement('th', { rowSpan: 2 }, 'Cetak')
       ),
@@ -649,7 +649,7 @@ function ClassTable({ records, instrument, onPrint }) {
                   return (
                     <td key={c.key}>
                       {v
-                        ? <span className="ct-score-b">{v.pct}%</span>
+                        ? <span className="ct-score-b">{bGroups ? v.right : `${v.pct}%`}</span>
                         : <span className="ct-pending">—</span>}
                     </td>
                   );

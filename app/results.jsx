@@ -162,7 +162,7 @@ window.ResultsScreen = function ({ murid, jawapan, onHome, instrument, viewOnly 
                     <AnalysisBlock
                       key={g.start}
                       title={g.title}
-                      scoreText={`${g.pct}% (${g.right}/${g.total})`}
+                      scoreText={`${g.right} betul`}
                       level={g.level}
                       tone={g.tone}
                       focus={g.focus}
