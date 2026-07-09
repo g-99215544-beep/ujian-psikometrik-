@@ -204,9 +204,29 @@ function CaRadar({ items }) {
 
 // ---- Analisis instrumen berasaskan domain (Tahun 5 & 6) ----
 
+function CaNameRow({ student, onSelect }) {
+  return (
+    <li className="ca-name-row">
+      <button className="ca-name-btn" onClick={() => onSelect(student)}>
+        {student.nama}
+      </button>
+      <span className="ca-name-badges">
+        {student.top3.map((s, i) => (
+          <span key={s.idx} className="ca-name-badge" style={{ borderColor: s.warna, color: s.warna }}>
+            {i + 1}) {s.nama} <small>({s.ya}/{s.total})</small>
+          </span>
+        ))}
+      </span>
+    </li>
+  );
+}
+
 function CaDomainAnalysis({ scored, instrument, label, groupByKelas }) {
   const domains = instrument.domains || [];
   const details = window.INTELLIGENCE_DETAILS || {};
+
+  const [dominanView, setDominanView] = React.useState('kecerdasan');
+  const [modalStudent, setModalStudent] = React.useState(null);
 
   const { stats, tiada } = React.useMemo(() => {
     const st = domains.map((def, idx) => ({
@@ -239,6 +259,18 @@ function CaDomainAnalysis({ scored, instrument, label, groupByKelas }) {
     });
     return { stats: st, tiada: tanpa };
   }, [scored, domains]);
+
+  const students = React.useMemo(
+    () => scored
+      .map(({ record, sc }) => ({
+        nama: record.murid.nama,
+        kelas: record.murid.kelas || 'Tiada Kelas',
+        top3: sc.top3,
+        all: [...sc.aScores].sort((a, b) => b.ya - a.ya),
+      }))
+      .sort((a, b) => a.nama.localeCompare(b.nama)),
+    [scored]
+  );
 
   const jumlahMurid = scored.length;
   const byDominan = [...stats].sort((a, b) => b.dominan.length - a.dominan.length);
@@ -409,35 +441,72 @@ function CaDomainAnalysis({ scored, instrument, label, groupByKelas }) {
       )}
 
       <div className="res-card">
-        <h2>Senarai Murid Mengikut Kecerdasan Dominan</h2>
-        <p className="res-card-sub">Rujukan guru: murid dikumpulkan mengikut kecerdasan paling dominan.</p>
-        {topDominan.map(s => (
-          <div key={s.def.key} className="ca-group">
-            <div className="ca-group-head" style={{ background: s.def.warna }}>
-              <span>{s.def.icon} {s.def.nama}</span>
-              <span>{s.dominan.length} murid</span>
-            </div>
-            {groupByKelas
-              ? [...new Set(s.dominan.map(m => m.kelas))].sort().map(k => (
-                  <div key={k} className="ca-group-kelas">
-                    <div className="ca-group-kelas-name">{k}</div>
+        <div className="ca-list-head">
+          <div>
+            <h2>Senarai Murid Mengikut Kecerdasan Dominan</h2>
+            <p className="res-card-sub">Rujukan guru: murid dikumpulkan mengikut kecerdasan paling dominan.</p>
+          </div>
+          <div className="view-tabs">
+            <button
+              className={`view-tab ${dominanView === 'kecerdasan' ? 'active' : ''}`}
+              onClick={() => setDominanView('kecerdasan')}>
+              ◧ Ikut Kecerdasan
+            </button>
+            <button
+              className={`view-tab ${dominanView === 'nama' ? 'active' : ''}`}
+              onClick={() => setDominanView('nama')}>
+              ☰ Ikut Nama Murid
+            </button>
+          </div>
+        </div>
+
+        {dominanView === 'kecerdasan' ? (
+          <>
+            {topDominan.map(s => (
+              <div key={s.def.key} className="ca-group">
+                <div className="ca-group-head" style={{ background: s.def.warna }}>
+                  <span>{s.def.icon} {s.def.nama}</span>
+                  <span>{s.dominan.length} murid</span>
+                </div>
+                {groupByKelas
+                  ? [...new Set(s.dominan.map(m => m.kelas))].sort().map(k => (
+                      <div key={k} className="ca-group-kelas">
+                        <div className="ca-group-kelas-name">{k}</div>
+                        <ol className="ca-names">
+                          {s.dominan.filter(m => m.kelas === k)
+                            .sort((a, b) => a.nama.localeCompare(b.nama))
+                            .map(m => <li key={m.nama}>{m.nama} <small>({m.ya}/{m.total})</small></li>)}
+                        </ol>
+                      </div>
+                    ))
+                  : (
                     <ol className="ca-names">
-                      {s.dominan.filter(m => m.kelas === k)
-                        .sort((a, b) => a.nama.localeCompare(b.nama))
+                      {[...s.dominan].sort((a, b) => a.nama.localeCompare(b.nama))
                         .map(m => <li key={m.nama}>{m.nama} <small>({m.ya}/{m.total})</small></li>)}
                     </ol>
-                  </div>
-                ))
-              : (
-                <ol className="ca-names">
-                  {[...s.dominan].sort((a, b) => a.nama.localeCompare(b.nama))
-                    .map(m => <li key={m.nama}>{m.nama} <small>({m.ya}/{m.total})</small></li>)}
-                </ol>
-              )}
-          </div>
-        ))}
-        {tiada.length > 0 && (
-          <p className="ca-note">Tiada kecenderungan jelas ({tiada.length}): {tiada.join(', ')}</p>
+                  )}
+              </div>
+            ))}
+            {tiada.length > 0 && (
+              <p className="ca-note">Tiada kecenderungan jelas ({tiada.length}): {tiada.join(', ')}</p>
+            )}
+          </>
+        ) : (
+          groupByKelas
+            ? [...new Set(students.map(m => m.kelas))].sort().map(k => (
+                <div key={k} className="ca-group-kelas">
+                  <div className="ca-group-kelas-name">{k}</div>
+                  <ul className="ca-name-list">
+                    {students.filter(m => m.kelas === k)
+                      .map(m => <CaNameRow key={m.nama} student={m} onSelect={setModalStudent} />)}
+                  </ul>
+                </div>
+              ))
+            : (
+              <ul className="ca-name-list">
+                {students.map(m => <CaNameRow key={m.nama} student={m} onSelect={setModalStudent} />)}
+              </ul>
+            )
         )}
       </div>
     </div>

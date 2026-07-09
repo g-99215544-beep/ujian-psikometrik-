@@ -879,6 +879,45 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   color: white; font-weight: 700; font-size: 0.9rem;
   padding: 8px 14px; border-radius: 8px; margin-bottom: 8px;
 }
+.ca-list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.ca-name-list { list-style: none; margin: 0; padding: 0; }
+.ca-name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ca-name-btn {
+  font-weight: 700;
+  color: var(--ink);
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.ca-name-btn:hover { text-decoration: underline; }
+.ca-name-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.ca-name-badge {
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+.ca-name-badge small { font-weight: 700; }
 .ca-group-kelas { margin: 6px 0 10px; }
 .ca-group-kelas-name {
   font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;
