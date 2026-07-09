@@ -221,6 +221,41 @@ function CaNameRow({ student, onSelect }) {
   );
 }
 
+function CaStudentModal({ student, onClose }) {
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const tahapLabel = { tinggi: 'Tinggi', sederhana: 'Sederhana', rendah: 'Rendah' };
+
+  return (
+    <div className="trait-modal-overlay" onClick={onClose}>
+      <div className="trait-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={student.nama}>
+        <button className="trait-modal-close" onClick={onClose} aria-label="Tutup">×</button>
+        <div className="trait-modal-header">
+          <h2>{student.nama}</h2>
+        </div>
+        <p className="res-card-sub ca-modal-kelas">{student.kelas}</p>
+        <ol className="ca-modal-intel">
+          {student.all.map(s => {
+            const t = caTahap(s.pct);
+            return (
+              <li key={s.idx} className="ca-modal-intel-row">
+                <span className="ca-dot" style={{ background: s.warna }}></span>
+                <span className="ca-modal-intel-name">{s.nama}</span>
+                <span className="ca-modal-intel-score">{s.ya}/{s.total}</span>
+                <span className={`ca-tahap ca-tahap-${t}`}>{tahapLabel[t]}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
 function CaDomainAnalysis({ scored, instrument, label, groupByKelas }) {
   const domains = instrument.domains || [];
   const details = window.INTELLIGENCE_DETAILS || {};
@@ -509,6 +544,10 @@ function CaDomainAnalysis({ scored, instrument, label, groupByKelas }) {
             )
         )}
       </div>
+
+      {modalStudent && (
+        <CaStudentModal student={modalStudent} onClose={() => setModalStudent(null)} />
+      )}
     </div>
   );
 }

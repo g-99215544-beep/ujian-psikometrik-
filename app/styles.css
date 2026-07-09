@@ -918,6 +918,28 @@ label.fld { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;
   white-space: nowrap;
 }
 .ca-name-badge small { font-weight: 700; }
+.ca-modal-kelas { margin: -6px 0 4px; }
+.ca-modal-intel { list-style: none; margin: 14px 0 4px; padding: 0; }
+.ca-modal-intel-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ca-modal-intel-name { flex: 1; }
+.ca-modal-intel-score { font-weight: 700; font-variant-numeric: tabular-nums; }
+.ca-tahap {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 2px 9px;
+  min-width: 78px;
+  text-align: center;
+}
+.ca-tahap-tinggi { color: var(--ok); background: oklch(0.95 0.06 150); }
+.ca-tahap-sederhana { color: #8a6d00; background: oklch(0.95 0.07 90); }
+.ca-tahap-rendah { color: var(--err); background: oklch(0.95 0.05 25); }
 .ca-group-kelas { margin: 6px 0 10px; }
 .ca-group-kelas-name {
   font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;
