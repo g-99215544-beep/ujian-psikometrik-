@@ -10,6 +10,14 @@
       namaKelas: 'CEMERLANG',
       noPengenalan: '160629101953',
       sekolah: 'SK Sri Aman'
+    },
+    '160919070630': {
+      nama: 'AFYA QISTINA BINTI EDDIWANIS',
+      kelas: '4 CEMERLANG',
+      tahun: 4,
+      namaKelas: 'CEMERLANG',
+      noPengenalan: '160919070630',
+      sekolah: 'SK Sri Aman'
     }
   };
 
